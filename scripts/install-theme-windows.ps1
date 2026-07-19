@@ -3,10 +3,10 @@ param([switch]$NoApply)
 
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
-$DefaultPresetId = 'preset-yuexinmiao'
+$DefaultPresetId = 'preset-yuexinmiao-payday'
 $PresetIds = @(
-  'preset-yuexinmiao',
-  'preset-yuexinmiao-payday'
+  'preset-yuexinmiao-payday',
+  'preset-yuexinmiao'
 )
 
 function Fail {
@@ -140,7 +140,7 @@ if ((Test-Path -LiteralPath $CommonScript -PathType Leaf) -and
     . $ThemeScript
     $null = Use-DreamSkinSavedTheme -ThemeDirectory $TargetDirs[$DefaultPresetId] -StateRoot $StateRoot
     Set-DreamSkinPaused -Paused $false -StateRoot $StateRoot | Out-Null
-    Write-Host '已应用默认样式“月薪喵”；可在“已保存的主题”中切换到“月薪喵 · 今日营业”。'
+    Write-Host '已应用默认样式“月薪喵 · 今日营业”；可在“已保存的主题”中切换到“月薪喵”。'
     exit 0
   } catch {
     Write-Warning "两套样式已保存，但未自动应用：$($_.Exception.Message)"

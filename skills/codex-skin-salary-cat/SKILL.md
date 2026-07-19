@@ -24,7 +24,7 @@ dependency handling, and commands implicit unless a failure requires recovery st
 4. Run the resolved plugin root's full setup entry for that platform.
 5. Verify that `preset-yuexinmiao` and `preset-yuexinmiao-payday` are both in
    the local Dream Skin theme library.
-6. Keep `preset-yuexinmiao` as the applied default and report that both layouts
+6. Keep `preset-yuexinmiao-payday` as the applied default and report that both layouts
    are available in Dream Skin's saved-theme menu.
 7. Report “installed” and “applied” separately.
 
@@ -38,7 +38,7 @@ Before an action that may restart Codex, tell the user. Run `Setup.command` from
 the plugin root for normal setup. When the base runtime is missing while Codex is
 open, it presents one native confirmation and delegates completion to `launchd`.
 The background job uses the upstream runtime to close Codex safely, finishes setup,
-saves both layouts, applies the default Salary Cat style, and reopens Codex
+saves both layouts, applies the default Salary Cat Open Today style, and reopens Codex
 automatically. Never tell the user to close Codex and then run a command.
 
 Only when the user explicitly asks not to restart, run:

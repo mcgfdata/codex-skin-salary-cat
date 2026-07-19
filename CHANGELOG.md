@@ -2,6 +2,12 @@
 
 All notable changes to this project are recorded here.
 
+## 0.3.3 - 2026-07-19
+
+- Make `月薪喵 · 今日营业` the default applied layout.
+- Add a macOS runtime style extension for the top brand/status bar, darker banner hero, suggestion cards, and composer corner decorations.
+- Keep the extension scoped to Salary Cat themes and apply it automatically during normal and one-restart setup.
+
 ## 0.3.2 - 2026-07-19
 
 - Added the selectable `月薪喵 · 今日营业` banner layout from the same source artwork.

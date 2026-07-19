@@ -9,10 +9,10 @@ SETUP_STATE_ROOT=""
 PROJECT_COPY=""
 CODEX_BUNDLE=""
 JOB_LABEL=""
-DEFAULT_PRESET_ID="preset-yuexinmiao"
+DEFAULT_PRESET_ID="preset-yuexinmiao-payday"
 PRESET_IDS=(
-  "preset-yuexinmiao"
   "preset-yuexinmiao-payday"
+  "preset-yuexinmiao"
 )
 
 notify() {
@@ -61,7 +61,7 @@ JOB_LABEL="${2:-}"
 if [ "$DRY_RUN" = "true" ]; then
   printf '会等待当前 Codex 安全退出。\n'
   printf '会使用官方 Codex Dream Skin 完成基础配置和重启。\n'
-  printf '会保存两套月薪喵样式、应用默认样式，并在成功后清理一次性文件。\n'
+  printf '会保存两套月薪喵样式、应用默认样式“月薪喵 · 今日营业”，并在成功后清理一次性文件。\n'
   exit 0
 fi
 
@@ -90,7 +90,11 @@ UPSTREAM_ARCHIVE="$PENDING_ROOT/Codex-Dream-Skin.zip"
 UPSTREAM_EXTRACT="$PENDING_ROOT/upstream"
 [ "$VALIDATE_ONLY" = "true" ] || trap 'finish "$?"' EXIT
 
-for required in "$PROJECT_COPY/scripts/install-theme-macos.sh" "$UPSTREAM_ARCHIVE"; do
+for required in \
+  "$PROJECT_COPY/assets/salary-cat-extension.css" \
+  "$PROJECT_COPY/scripts/apply-runtime-extension-macos.sh" \
+  "$PROJECT_COPY/scripts/install-theme-macos.sh" \
+  "$UPSTREAM_ARCHIVE"; do
   [ -f "$required" ] && [ ! -L "$required" ] || fail "一次性设置文件缺失或不安全: $required"
 done
 for preset_id in "${PRESET_IDS[@]}"; do

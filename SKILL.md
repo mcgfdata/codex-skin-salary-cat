@@ -25,7 +25,7 @@ dependency handling, and commands implicit unless a failure requires recovery st
 4. Run the repository's full setup entry for that platform.
 5. Verify `preset-yuexinmiao/theme.json` and `preset-yuexinmiao-payday/theme.json`
    in the local Dream Skin theme library.
-6. Keep `preset-yuexinmiao` as the applied default and report that both layouts
+6. Keep `preset-yuexinmiao-payday` as the applied default and report that both layouts
    are available in Dream Skin's saved-theme menu.
 7. Report “installed” and “applied” separately.
 
@@ -48,7 +48,7 @@ For normal setup, run:
 If the runtime is missing while Codex is open, this entry presents one native
 confirmation and delegates the remaining work to a one-shot `launchd` job. It safely
 closes Codex through the upstream runtime, completes setup, saves both layouts,
-applies the default Salary Cat style, and reopens Codex automatically. Never ask the
+applies the default Salary Cat Open Today style, and reopens Codex automatically. Never ask the
 user to run a command after closing Codex.
 
 Only when the user explicitly asks not to restart, prepare without applying:
@@ -63,9 +63,9 @@ Verify:
 
 ```bash
 /usr/bin/plutil -extract id raw -o - \
-  "$HOME/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao/theme.json"
-/usr/bin/plutil -extract id raw -o - \
   "$HOME/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao-payday/theme.json"
+/usr/bin/plutil -extract id raw -o - \
+  "$HOME/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao/theme.json"
 ```
 
 ## Windows

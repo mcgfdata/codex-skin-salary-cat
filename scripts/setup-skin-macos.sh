@@ -4,10 +4,10 @@ set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd -P)"
 UPSTREAM_ARCHIVE_URL="https://github.com/Fei-Away/Codex-Dream-Skin/archive/refs/heads/main.zip"
-DEFAULT_PRESET_ID="preset-yuexinmiao"
+DEFAULT_PRESET_ID="preset-yuexinmiao-payday"
 PRESET_IDS=(
-  "preset-yuexinmiao"
   "preset-yuexinmiao-payday"
+  "preset-yuexinmiao"
 )
 APPLY_NOW="true"
 DRY_RUN="false"
@@ -78,8 +78,10 @@ schedule_deferred_setup() {
   /bin/chmod 700 "$deferred_root"
   pending="$(/usr/bin/mktemp -d "$deferred_root/pending.XXXXXX")"
   project_copy="$pending/project"
-  /bin/mkdir -p "$project_copy/scripts"
-  /bin/cp "$PROJECT_ROOT/scripts/install-theme-macos.sh" "$project_copy/scripts/"
+  /bin/mkdir -p "$project_copy/assets" "$project_copy/scripts"
+  /bin/cp "$PROJECT_ROOT/assets/salary-cat-extension.css" "$project_copy/assets/"
+  /bin/cp "$PROJECT_ROOT/scripts/apply-runtime-extension-macos.sh" \
+    "$PROJECT_ROOT/scripts/install-theme-macos.sh" "$project_copy/scripts/"
   for preset_id in "${PRESET_IDS[@]}"; do
     /bin/mkdir -p "$project_copy/presets/$preset_id"
     /bin/cp "$PROJECT_ROOT/presets/$preset_id/background.jpg" \
@@ -87,8 +89,10 @@ schedule_deferred_setup() {
   done
   /bin/cp "$PROJECT_ROOT/scripts/finish-setup-macos.sh" "$pending/"
   /bin/cp "$upstream_archive" "$pending/Codex-Dream-Skin.zip"
-  /bin/chmod 700 "$pending" "$project_copy" "$project_copy/scripts" \
+  /bin/chmod 700 "$pending" "$project_copy" "$project_copy/assets" "$project_copy/scripts" \
+    "$project_copy/scripts/apply-runtime-extension-macos.sh" \
     "$project_copy/scripts/install-theme-macos.sh" "$pending/finish-setup-macos.sh"
+  /bin/chmod 600 "$project_copy/assets/salary-cat-extension.css"
   /bin/chmod 600 "$pending/Codex-Dream-Skin.zip"
   for preset_id in "${PRESET_IDS[@]}"; do
     /bin/chmod 700 "$project_copy/presets/$preset_id"
@@ -155,4 +159,4 @@ fi
 
 [ "$THEME_PREPARED" = "true" ] || "$PROJECT_ROOT/scripts/install-theme-macos.sh" --no-apply
 "$BASE_SWITCH" --id "$DEFAULT_PRESET_ID" --no-apply
-printf '两套月薪喵样式已保存，默认样式已设为活动主题；下次从 Codex Dream Skin 启动时生效。\n'
+printf '两套月薪喵样式已保存，默认样式“月薪喵 · 今日营业”已设为活动主题；下次从 Codex Dream Skin 启动时生效。\n'

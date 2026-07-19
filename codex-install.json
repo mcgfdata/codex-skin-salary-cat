@@ -1,33 +1,33 @@
 {
   "schemaVersion": 1,
   "packageType": "codex-dream-skin-theme",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "repository": "https://github.com/mcgfdata/codex-skin-salary-cat",
   "author": {
     "name": "终端极客",
     "github": "mcgfdata"
   },
   "theme": {
-    "id": "preset-yuexinmiao",
-    "name": "月薪喵",
-    "presetDirectory": "presets/preset-yuexinmiao"
+    "id": "preset-yuexinmiao-payday",
+    "name": "月薪喵 · 今日营业",
+    "presetDirectory": "presets/preset-yuexinmiao-payday"
   },
   "themes": [
-    {
-      "id": "preset-yuexinmiao",
-      "name": "月薪喵",
-      "presetDirectory": "presets/preset-yuexinmiao",
-      "default": true
-    },
     {
       "id": "preset-yuexinmiao-payday",
       "name": "月薪喵 · 今日营业",
       "presetDirectory": "presets/preset-yuexinmiao-payday",
+      "default": true
+    },
+    {
+      "id": "preset-yuexinmiao",
+      "name": "月薪喵",
+      "presetDirectory": "presets/preset-yuexinmiao",
       "default": false
     }
   ],
   "selection": {
-    "defaultThemeId": "preset-yuexinmiao",
+    "defaultThemeId": "preset-yuexinmiao-payday",
     "surface": "Codex Dream Skin 已保存的主题"
   },
   "runtime": {
@@ -54,7 +54,7 @@
       "windows": ["Windows PowerShell 5.1 or newer", "Expand-Archive"]
     },
     "userProvided": ["Official Codex Desktop", "HTTPS network access"],
-    "rebuildOnly": ["Python 3.10 or newer", "Pillow 12.2.0"],
+    "rebuildOnly": ["Python 3.9 or newer", "Pillow 11.3.0"],
     "gitRequired": false,
     "administratorRequired": false
   },
@@ -68,10 +68,10 @@
       "safeSetupCommand": "./scripts/setup-skin-macos.sh --no-apply",
       "automaticResumeAfterQuit": true,
       "restartPolicy": "one-confirmation-auto-restart",
-      "themeDirectory": "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao",
+      "themeDirectory": "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao-payday",
       "themeDirectories": [
-        "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao",
-        "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao-payday"
+        "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao-payday",
+        "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao"
       ]
     },
     "windows": {
@@ -80,10 +80,10 @@
       "installCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1",
       "installOnlyCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1 -NoApply",
       "fullSetupCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Setup.ps1",
-      "themeDirectory": "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao",
+      "themeDirectory": "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao-payday",
       "themeDirectories": [
-        "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao",
-        "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao-payday"
+        "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao-payday",
+        "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao"
       ]
     }
   },

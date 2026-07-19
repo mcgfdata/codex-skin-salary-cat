@@ -6,9 +6,9 @@ Author: 终端极客 · [GitHub repository](https://github.com/mcgfdata/codex-sk
 
 A two-layout, single-image theme pack for [Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin).
 
-| Salary Cat (default) | Salary Cat · Open Today (banner) |
+| Salary Cat · Open Today (default banner) | Salary Cat (immersive) |
 |---|---|
-| <img src="./presets/preset-yuexinmiao/background.jpg" alt="Default Salary Cat layout preview"> | <img src="./presets/preset-yuexinmiao-payday/background.jpg" alt="Salary Cat Open Today banner layout preview"> |
+| <img src="./presets/preset-yuexinmiao-payday/background.jpg" alt="Default Salary Cat Open Today banner preview"> | <img src="./presets/preset-yuexinmiao/background.jpg" alt="Salary Cat immersive layout preview"> |
 
 > This lightweight package does not bundle the Dream Skin runtime and does not modify the official Codex installation. The full setup entry obtains the prerequisite only from its official upstream repository when needed.
 
@@ -24,7 +24,7 @@ The public prompt is sufficient on its own. Repository guidance tells Codex to s
 
 On macOS, first-time setup shows one native confirmation, then automatically closes Codex, completes the official Dream Skin configuration in a one-shot background job, applies Salary Cat, and reopens Codex. Users never need to run a command after quitting the app.
 
-Both layouts are saved together. `月薪喵` remains the default, and users can switch to `月薪喵 · 今日营业` from Dream Skin's saved-theme menu without repeating setup.
+Both layouts are saved together. `月薪喵 · 今日营业` is the default, and users can switch to `月薪喵` from Dream Skin's saved-theme menu without repeating setup.
 
 See [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md) for the full agent-facing flow.
 
@@ -33,7 +33,7 @@ See [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md) for the full agent-facing
 - Theme format: Codex Dream Skin schema version 1
 - Validated with the upstream `1.2.0` runtime payload checker
 - Platforms: macOS and Windows
-- Theme IDs: `preset-yuexinmiao` (default) and `preset-yuexinmiao-payday` (banner)
+- Theme IDs: `preset-yuexinmiao-payday` (default banner) and `preset-yuexinmiao` (immersive)
 - Theme libraries: macOS `~/Library/Application Support/CodexDreamSkinStudio/themes/`; Windows `%LOCALAPPDATA%\CodexDreamSkin\themes\`
 
 Future upstream schema changes may require a matching update here.
@@ -46,7 +46,7 @@ Regular installation only requires the official Codex Desktop app and HTTPS netw
 - Windows: no Git or Python is required. When Node.js 22+ is unavailable, Setup downloads the matching x64/ARM64 archive from nodejs.org, verifies its official SHA-256, installs it for the current user, and updates the user PATH.
 - Administrator access is not required on either platform.
 
-Python 3.10 and Pillow are rebuild-only dependencies for maintainers; users do not need them to install the skin.
+Python 3.9 and Pillow 11.3.0 are rebuild-only dependencies for maintainers; users do not need them to install the skin.
 
 If Codex is running during first-time setup, `Setup` prepares all safe dependency and theme-file steps before asking the user to close Codex. Run the same entry again after closing Codex to finish the base runtime and apply the theme; setup does not bypass upstream `config.toml` protections.
 
@@ -76,11 +76,11 @@ On macOS, if Gatekeeper blocks the first launch, right-click `Install.command` i
 
 The repository only uses [`source/salary-cat-source.png`](./source/salary-cat-source.png). It does not add another subject or image; the layout reference screenshot is never packaged as an asset.
 
-The `1942 × 809` source is approximately `2.40:1`. The default layout is `2560 × 1440` and crops roughly 26% of the horizontal frame, mostly left-side whitespace, to enlarge the subject. The banner layout is `2240 × 1600` (`1.40:1`): it preserves the full source width and bottom-aligns it on a sampled pale canvas. Staying below Dream Skin's `1.45` wide-art expansion threshold keeps the native home hero card, while explicit `taskMode: banner` enables the task-page banner. Neither layout uses inpainting or creates image detail.
+The `1942 × 809` source is approximately `2.40:1`. The default banner layout is `2240 × 1600` (`1.40:1`): it preserves the full source width and bottom-aligns it on a sampled pale canvas. Staying below Dream Skin's `1.45` wide-art expansion threshold keeps the native home hero card, while explicit `taskMode: banner` enables the task-page banner. On macOS, the setup also applies a scoped Salary Cat runtime style extension for the top brand/status bar, darker banner hero, and composer decorations. The immersive layout is `2560 × 1440` and crops roughly 26% of the horizontal frame, mostly left-side whitespace, to enlarge the subject. Neither layout uses inpainting or creates image detail.
 
 ## Rebuild and validate
 
-Python 3.10 or newer is required:
+Python 3.9 or newer is required:
 
 ```bash
 python3 -m pip install -r requirements.txt
@@ -98,7 +98,7 @@ Build an install-only ZIP with:
 
 ```bash
 python3 scripts/package_release.py \
-  --output dist/codex-skin-salary-cat-0.3.2.zip
+  --output dist/codex-skin-salary-cat-0.3.3.zip
 ```
 
 ## License and notice

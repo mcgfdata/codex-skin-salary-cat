@@ -3,10 +3,10 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd -P)"
-DEFAULT_PRESET_ID="preset-yuexinmiao"
+DEFAULT_PRESET_ID="preset-yuexinmiao-payday"
 PRESET_IDS=(
-  "preset-yuexinmiao"
   "preset-yuexinmiao-payday"
+  "preset-yuexinmiao"
 )
 THEME_ROOT=""
 BASE_SWITCH=""
@@ -65,6 +65,7 @@ done
 HOME_ROOT="$(cd "$HOME" && pwd -P)" || fail "无法解析 HOME: $HOME"
 THEME_ROOT="$HOME_ROOT/Library/Application Support/CodexDreamSkinStudio/themes"
 BASE_SWITCH="$HOME_ROOT/.codex/codex-dream-skin-studio/scripts/switch-theme-macos.sh"
+RUNTIME_EXTENSION="$PROJECT_ROOT/scripts/apply-runtime-extension-macos.sh"
 
 assert_no_symlink_components "$THEME_ROOT"
 /bin/mkdir -p "$THEME_ROOT"
@@ -113,9 +114,13 @@ BACKUP_ROOT=""
 
 printf '两套月薪喵样式已保存到：%s\n' "$THEME_ROOT"
 
+if [ -x "$RUNTIME_EXTENSION" ] && [ -f "$HOME_ROOT/.codex/codex-dream-skin-studio/assets/dream-skin.css" ]; then
+  "$RUNTIME_EXTENSION" >/dev/null
+fi
+
 if [ "$APPLY_NOW" = "true" ] && [ -x "$BASE_SWITCH" ]; then
   if "$BASE_SWITCH" --id "$DEFAULT_PRESET_ID" >/dev/null 2>&1; then
-    printf '已应用默认样式“月薪喵”；可在“已保存的主题”中切换到“月薪喵 · 今日营业”。\n'
+    printf '已应用默认样式“月薪喵 · 今日营业”；可在“已保存的主题”中切换到“月薪喵”。\n'
     exit 0
   fi
   printf '两套样式已保存但未自动应用，可在 Codex Dream Skin 的“已保存的主题”中选择。\n'

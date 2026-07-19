@@ -10,10 +10,10 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PRESET_ID = "preset-yuexinmiao"
+DEFAULT_PRESET_ID = "preset-yuexinmiao-payday"
 PRESET_IDS = (
     DEFAULT_PRESET_ID,
-    "preset-yuexinmiao-payday",
+    "preset-yuexinmiao",
 )
 MANIFEST_PATH = ROOT / "codex-install.json"
 PLUGIN_PATH = ROOT / ".codex-plugin" / "plugin.json"
@@ -80,7 +80,7 @@ def validate_install_manifest() -> None:
     declared_ids = [item.get("id") for item in themes if isinstance(item, dict)]
     if declared_ids != list(PRESET_IDS):
         fail("codex-install.json theme order or ids are invalid")
-    for index, (item, preset_id) in enumerate(zip(themes, PRESET_IDS, strict=True)):
+    for index, (item, preset_id) in enumerate(zip(themes, PRESET_IDS)):
         if item.get("presetDirectory") != f"presets/{preset_id}":
             fail(f"codex-install.json has an invalid preset directory for {preset_id}")
         if item.get("default") is not (index == 0):
@@ -121,7 +121,7 @@ def validate_install_manifest() -> None:
     macos_theme_dirs = platforms.get("macos", {}).get("themeDirectories")
     if not isinstance(macos_theme_dirs, list) or not all(
         directory.endswith(preset_id)
-        for directory, preset_id in zip(macos_theme_dirs, PRESET_IDS, strict=False)
+        for directory, preset_id in zip(macos_theme_dirs, PRESET_IDS)
     ) or len(macos_theme_dirs) != len(PRESET_IDS):
         fail("codex-install.json has invalid macOS theme directories")
     if "Setup.ps1" not in platforms.get("windows", {}).get("fullSetupCommand", ""):
@@ -131,7 +131,7 @@ def validate_install_manifest() -> None:
     windows_theme_dirs = platforms.get("windows", {}).get("themeDirectories")
     if not isinstance(windows_theme_dirs, list) or not all(
         directory.endswith(preset_id)
-        for directory, preset_id in zip(windows_theme_dirs, PRESET_IDS, strict=False)
+        for directory, preset_id in zip(windows_theme_dirs, PRESET_IDS)
     ) or len(windows_theme_dirs) != len(PRESET_IDS):
         fail("codex-install.json has invalid Windows theme directories")
     dependencies = manifest.get("dependencies")
@@ -165,6 +165,8 @@ def validate_install_manifest() -> None:
     for setup_path in (
         ROOT / "Setup.command",
         ROOT / "Setup.ps1",
+        ROOT / "assets" / "salary-cat-extension.css",
+        ROOT / "scripts" / "apply-runtime-extension-macos.sh",
         ROOT / "scripts" / "finish-setup-macos.sh",
         ROOT / "scripts" / "setup-skin-macos.sh",
         ROOT / "skills" / "codex-skin-salary-cat" / "scripts" / "bootstrap-macos.sh",
@@ -182,6 +184,10 @@ def validate_install_manifest() -> None:
         fail("Windows portable Node.js download must verify the official SHA-256")
     if "launchctl submit" not in macos_setup or "finish-setup-macos.sh" not in macos_setup:
         fail("macOS first-time setup must delegate completion to launchd")
+    if "salary-cat-extension.css" not in macos_setup or "apply-runtime-extension-macos.sh" not in macos_setup:
+        fail("macOS setup must stage the Salary Cat runtime style extension")
+    if "apply-runtime-extension-macos.sh" not in (ROOT / "scripts" / "install-theme-macos.sh").read_text(encoding="utf-8"):
+        fail("macOS theme installation must apply the runtime style extension")
     if "stop_codex true" not in macos_finish or "--no-launch" not in macos_finish:
         fail("macOS deferred setup must reuse the upstream safe restart workflow")
     if "launchctl remove" not in macos_finish:
