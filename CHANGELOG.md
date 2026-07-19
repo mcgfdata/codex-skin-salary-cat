@@ -2,6 +2,14 @@
 
 All notable changes to this project are recorded here.
 
+## 0.3.0 - 2026-07-19
+
+- Removed Git as an installation prerequisite by using official HTTPS archives.
+- Added automatic, SHA-256-verified user-level Node.js 22 installation on Windows.
+- Added self-contained Skill bootstrap scripts for macOS and Windows.
+- Documented install-time, rebuild-only, and non-automatable prerequisites.
+- Added validated runtime completion markers so interrupted first-time setup resumes correctly.
+
 ## 0.2.0 - 2026-07-19
 
 - Added a root Codex Skill and plugin manifest for repository-based discovery.

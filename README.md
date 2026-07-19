@@ -20,7 +20,7 @@
 帮我设置 Codex 皮肤 mcgfdata/codex-skin-salary-cat，作者是终端极客
 ```
 
-仓库从 `0.2.0` 起同时是标准 Codex Plugin 和 Skill。Codex 可以安装 [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md)，读取 [`codex-install.json`](./codex-install.json)，再执行完整安装入口。首次安装基础运行时可能需要关闭或重启 Codex，代理必须把“已安装”和“已应用”分开报告。
+仓库同时是标准 Codex Plugin 和 Skill。Codex 可以安装 [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md)，由 Skill 自带的 bootstrap 下载完整仓库，再执行完整安装入口。首次安装基础运行时可能需要关闭或重启 Codex，代理必须把“已安装”和“已应用”分开报告。
 
 完整说明见 [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md)。
 
@@ -35,9 +35,26 @@
 
 上游运行时以后如果修改主题 schema，本仓库也需要同步适配。
 
+## 依赖环境
+
+普通安装只要求：
+
+- 已安装官方 Codex Desktop
+- 可以访问 GitHub 和官方依赖下载地址的 HTTPS 网络
+
+其余依赖由 Codex 和 `Setup` 自动处理：
+
+- macOS：不需要 Git、Python、Pillow 或额外 Node.js；使用系统自带 `curl` / `ditto` 下载官方 Dream Skin，运行时复用 Codex 自带 Node
+- Windows：不需要 Git 或 Python；如果找不到 Node.js 22+，自动从 nodejs.org 下载对应 x64/ARM64 版本，核对官方 SHA-256 后安装到用户目录并配置用户 PATH
+- 两个平台都不需要管理员权限
+
+Python 3.10 和 Pillow 只用于维护者重新生成 `background.jpg`，普通用户安装皮肤不会用到。
+
+首次安装时，如果 Codex 正在运行，`Setup` 会先完成能安全执行的依赖下载和主题文件安装，再提示退出 Codex。退出后重跑同一入口即可完成基础运行时和主题应用；安装器不会绕过上游对 `config.toml` 的保护。
+
 ## 安装
 
-1. 从本仓库 Releases 下载月薪喵安装包并完整解压，或者克隆本仓库。
+1. 从本仓库 Releases 下载月薪喵安装包并完整解压，或者让 Codex 通过 Skill bootstrap 下载；不要求 Git。
 2. 运行完整安装入口；它会检测并按需安装官方基础运行时：
    - macOS：双击 [`Setup.command`](./Setup.command)
    - Windows：双击 [`Setup.cmd`](./Setup.cmd)，或运行 [`Setup.ps1`](./Setup.ps1)
@@ -96,7 +113,7 @@ python3 scripts/validate_theme.py --release
 
 ```bash
 python3 scripts/package_release.py \
-  --output dist/codex-skin-salary-cat-0.2.0.zip
+  --output dist/codex-skin-salary-cat-0.3.0.zip
 ```
 
 ## 仓库内容

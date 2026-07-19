@@ -20,7 +20,7 @@ In a new Codex task, send:
 帮我设置 Codex 皮肤 mcgfdata/codex-skin-salary-cat，作者是终端极客
 ```
 
-Starting with `0.2.0`, the repository is also a standard Codex Plugin and Skill. Codex can install [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md), read [`codex-install.json`](./codex-install.json), and run the full setup entry. A first-time runtime setup may require closing or restarting Codex.
+The repository is also a standard Codex Plugin and Skill. Codex can install [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md), use its bundled bootstrap to download the full repository, and run the complete setup entry. A first-time runtime setup may require closing or restarting Codex.
 
 See [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md) for the full agent-facing flow.
 
@@ -35,9 +35,21 @@ See [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md) for the full agent-facing
 
 Future upstream schema changes may require a matching update here.
 
+## Dependencies
+
+Regular installation only requires the official Codex Desktop app and HTTPS network access.
+
+- macOS: no Git, Python, Pillow, or separate Node.js is required. Setup uses system `curl` / `ditto`, and Dream Skin reuses Codex's bundled Node.
+- Windows: no Git or Python is required. When Node.js 22+ is unavailable, Setup downloads the matching x64/ARM64 archive from nodejs.org, verifies its official SHA-256, installs it for the current user, and updates the user PATH.
+- Administrator access is not required on either platform.
+
+Python 3.10 and Pillow are rebuild-only dependencies for maintainers; users do not need them to install the skin.
+
+If Codex is running during first-time setup, `Setup` prepares all safe dependency and theme-file steps before asking the user to close Codex. Run the same entry again after closing Codex to finish the base runtime and apply the theme; setup does not bypass upstream `config.toml` protections.
+
 ## Install
 
-1. Download and fully extract the ZIP from Releases, or clone the repository.
+1. Download and fully extract the ZIP from Releases, or let the Skill bootstrap download it. Git is not required.
 2. Run the full setup entry, which installs the official prerequisite when missing:
    - macOS: double-click [`Setup.command`](./Setup.command)
    - Windows: double-click [`Setup.cmd`](./Setup.cmd), or run [`Setup.ps1`](./Setup.ps1)
@@ -83,7 +95,7 @@ Build an install-only ZIP with:
 
 ```bash
 python3 scripts/package_release.py \
-  --output dist/codex-skin-salary-cat-0.2.0.zip
+  --output dist/codex-skin-salary-cat-0.3.0.zip
 ```
 
 ## License and notice

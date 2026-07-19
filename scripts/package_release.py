@@ -36,12 +36,15 @@ PACKAGE_FILES = [
     "scripts/setup-skin-macos.sh",
     "skills/codex-skin-salary-cat/SKILL.md",
     "skills/codex-skin-salary-cat/agents/openai.yaml",
+    "skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh",
+    "skills/codex-skin-salary-cat/scripts/bootstrap-windows.ps1",
 ]
 EXECUTABLE_FILES = {
     "Install.command",
     "Setup.command",
     "scripts/install-theme-macos.sh",
     "scripts/setup-skin-macos.sh",
+    "skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh",
 }
 ZIP_TIMESTAMP = (2026, 1, 1, 0, 0, 0)
 

@@ -25,9 +25,11 @@ jobs:
       - name: Require reproducible generated files
         run: git diff --exit-code -- presets/preset-yuexinmiao
       - name: Check shell syntax
-        run: bash -n Install.command Setup.command scripts/install-theme-macos.sh scripts/setup-skin-macos.sh
+        run: bash -n Install.command Setup.command scripts/install-theme-macos.sh scripts/setup-skin-macos.sh skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh
       - name: Check full setup dry run
-        run: ./scripts/setup-skin-macos.sh --dry-run
+        run: |
+          ./scripts/setup-skin-macos.sh --dry-run
+          ./skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh --dry-run
       - name: Check Windows PowerShell source encoding
         run: |
           python - <<'PY'
@@ -46,7 +48,12 @@ jobs:
           import zipfile
 
           with zipfile.ZipFile('dist/codex-skin-salary-cat-test.zip') as archive:
-              for suffix in ('/Install.command', '/Setup.command', '/scripts/setup-skin-macos.sh'):
+              for suffix in (
+                  '/Install.command',
+                  '/Setup.command',
+                  '/scripts/setup-skin-macos.sh',
+                  '/skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh',
+              ):
                   command = next(info for info in archive.infolist() if info.filename.endswith(suffix))
                   if not ((command.external_attr >> 16) & 0o111):
                       raise SystemExit(f'{suffix} is not executable in the release ZIP')

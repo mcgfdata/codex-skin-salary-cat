@@ -15,14 +15,19 @@ Install the existing theme; never generate or replace its artwork.
 4. Verify `preset-yuexinmiao/theme.json` in the local Dream Skin theme library.
 5. Report “installed” and “applied” separately.
 
-If this skill was invoked from a GitHub reference but is not installed locally, clone
-`https://github.com/mcgfdata/codex-skin-salary-cat.git` to a temporary directory first,
-then run the setup entry from that checkout.
+The setup request authorizes downloading the declared supported dependencies. Run
+the setup entry and let it install them; do not send the user away to install Git,
+Python, Pillow, or Node.js manually.
+
+If this skill was invoked from a GitHub reference but is not installed locally, fetch
+the repository's HTTPS source archive with system tools; do not require Git. Then run
+the setup entry from that checkout.
 
 ## macOS
 
 The user's setup request authorizes installing the official prerequisite from
 `Fei-Away/Codex-Dream-Skin`. Before an action that may restart Codex, tell the user.
+Do not ask for Git, Python, Pillow, or a separate Node.js installation on macOS.
 
 For a complete setup that may restart Codex as its final action:
 
@@ -54,7 +59,10 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Setup.ps1
 
 The first base-runtime install requires the official Codex process to be closed. If
 it is open, prepare the checkout and command, then clearly ask the user to close Codex
-and run `Setup.cmd`. Do not claim the theme was applied before verification.
+and run `Setup.cmd`. Setup still installs the theme files and portable Node.js before
+that handoff. Do not claim the theme was applied before verification.
+Automatically install a verified user-level Node.js 22 when no compatible Node is in
+`PATH`; do not ask the user to install it manually.
 
 ## Safety
 

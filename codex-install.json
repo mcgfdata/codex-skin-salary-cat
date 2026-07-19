@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "packageType": "codex-dream-skin-theme",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "repository": "https://github.com/mcgfdata/codex-skin-salary-cat",
   "author": {
     "name": "终端极客",
@@ -18,9 +18,24 @@
     "schemaVersion": 1,
     "validatedVersion": "1.2.0"
   },
+  "dependencies": {
+    "automaticallyInstalled": {
+      "macos": ["Codex Dream Skin runtime"],
+      "windows": ["Node.js 22", "Codex Dream Skin runtime"]
+    },
+    "systemProvided": {
+      "macos": ["curl", "ditto"],
+      "windows": ["Windows PowerShell 5.1 or newer", "Expand-Archive"]
+    },
+    "userProvided": ["Official Codex Desktop", "HTTPS network access"],
+    "rebuildOnly": ["Python 3.10 or newer", "Pillow 12.2.0"],
+    "gitRequired": false,
+    "administratorRequired": false
+  },
   "platforms": {
     "macos": {
       "detectRuntime": "~/.codex/codex-dream-skin-studio/scripts/switch-theme-macos.sh",
+      "detectRuntimeMarker": "~/Library/Application Support/CodexDreamSkinStudio/theme-backup.json",
       "installCommand": "./scripts/install-theme-macos.sh",
       "installOnlyCommand": "./scripts/install-theme-macos.sh --no-apply",
       "fullSetupCommand": "./Setup.command",
@@ -29,6 +44,7 @@
     },
     "windows": {
       "detectRuntime": "%LOCALAPPDATA%\\CodexDreamSkin\\engine\\scripts\\theme-windows.ps1",
+      "detectRuntimeMarker": "%LOCALAPPDATA%\\CodexDreamSkin\\config.before-dream-skin.toml.appearance.json",
       "installCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1",
       "installOnlyCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1 -NoApply",
       "fullSetupCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Setup.ps1",

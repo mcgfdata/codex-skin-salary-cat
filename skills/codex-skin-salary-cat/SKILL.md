@@ -11,13 +11,17 @@ Install the existing theme; never generate or replace its artwork.
 
 1. Resolve the plugin root two directories above this `SKILL.md`.
 2. If that directory does not contain `Setup.command` and `Setup.ps1`, this is a
-   standalone Skill installation. Clone
-   `https://github.com/mcgfdata/codex-skin-salary-cat.git` to a temporary
-   directory and use that checkout as the plugin root.
+   standalone Skill installation. Run the bundled platform bootstrap under this
+   Skill's `scripts/` directory; it downloads the complete repository over HTTPS
+   without requiring Git.
 3. Detect macOS or Windows.
 4. Run the resolved plugin root's full setup entry for that platform.
 5. Verify that the installed theme ID is `preset-yuexinmiao`.
 6. Report “installed” and “applied” separately.
+
+The setup request authorizes supported dependency downloads. Let the setup entry
+install them automatically; do not ask the user to install Git, Python, Pillow, or
+Node.js manually.
 
 ## macOS
 
@@ -31,6 +35,9 @@ the plugin root for complete setup. To avoid restarting the current task, run:
 That command installs the official prerequisite when missing, installs Salary
 Cat, and selects it for the next Dream Skin launch.
 
+For a standalone Skill installation, run `scripts/bootstrap-macos.sh` from the
+installed Skill directory. Do not ask for Git, Python, Pillow, or separate Node.js.
+
 ## Windows
 
 Run `Setup.ps1` from the plugin root:
@@ -41,6 +48,10 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Setup.ps1
 
 The first prerequisite install requires Codex to be closed. If it is open,
 prepare the command and clearly tell the user to close Codex and run `Setup.cmd`.
+For a standalone Skill installation, run `scripts/bootstrap-windows.ps1`. It
+automatically installs a SHA-256-verified user-level Node.js 22 when needed.
+Theme files and portable Node.js can be prepared before the user closes Codex;
+report them as installed but not applied until final verification succeeds.
 
 ## Safety
 

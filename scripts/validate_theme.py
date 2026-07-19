@@ -77,8 +77,20 @@ def validate_install_manifest() -> None:
         fail("codex-install.json must declare platform setup commands")
     if platforms.get("macos", {}).get("fullSetupCommand") != "./Setup.command":
         fail("codex-install.json has an invalid macOS setup command")
+    if "theme-backup.json" not in platforms.get("macos", {}).get("detectRuntimeMarker", ""):
+        fail("codex-install.json must declare the macOS runtime completion marker")
     if "Setup.ps1" not in platforms.get("windows", {}).get("fullSetupCommand", ""):
         fail("codex-install.json has an invalid Windows setup command")
+    if "appearance.json" not in platforms.get("windows", {}).get("detectRuntimeMarker", ""):
+        fail("codex-install.json must declare the Windows runtime completion marker")
+    dependencies = manifest.get("dependencies")
+    if not isinstance(dependencies, dict):
+        fail("codex-install.json must declare installation dependencies")
+    if dependencies.get("gitRequired") is not False or dependencies.get("administratorRequired") is not False:
+        fail("installation must not require Git or administrator access")
+    windows_dependencies = dependencies.get("automaticallyInstalled", {}).get("windows", [])
+    if "Node.js 22" not in windows_dependencies:
+        fail("Windows must declare automatic Node.js 22 installation")
 
     try:
         plugin = json.loads(PLUGIN_PATH.read_text(encoding="utf-8"))
@@ -103,9 +115,18 @@ def validate_install_manifest() -> None:
         ROOT / "Setup.command",
         ROOT / "Setup.ps1",
         ROOT / "scripts" / "setup-skin-macos.sh",
+        ROOT / "skills" / "codex-skin-salary-cat" / "scripts" / "bootstrap-macos.sh",
+        ROOT / "skills" / "codex-skin-salary-cat" / "scripts" / "bootstrap-windows.ps1",
     ):
         if not setup_path.is_file():
             fail(f"full setup entry is missing: {setup_path}")
+
+    macos_setup = (ROOT / "scripts" / "setup-skin-macos.sh").read_text(encoding="utf-8")
+    windows_setup = (ROOT / "Setup.ps1").read_text(encoding="utf-8-sig")
+    if "git clone" in macos_setup or "git.exe" in windows_setup:
+        fail("full setup must not require Git")
+    if "SHASUMS256.txt" not in windows_setup or "Get-FileHash" not in windows_setup:
+        fail("Windows portable Node.js download must verify the official SHA-256")
 
 
 def validate_text(theme: dict[str, object], key: str, maximum: int) -> None:
