@@ -76,6 +76,14 @@ html.codex-dream-skin[style*="月薪喵"] main.main-surface > header.app-header-
   box-shadow: 0 1px 14px rgb(112 79 38 / .10) !important;
 }
 
+html.codex-dream-skin[style*="月薪喵"]
+  main.main-surface:not(.dream-skin-home-shell) > header.app-header-tint > :first-child:has(> svg):has(> :is(span, div, p)),
+html.codex-dream-skin[style*="月薪喵"]
+  main.main-surface:not(.dream-skin-home-shell) > header.app-header-tint > :first-child > :first-child:has(svg) {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 html.codex-dream-skin[style*="月薪喵"] #codex-dream-skin-chrome {
   border-radius: 0 !important;
 }
@@ -173,7 +181,7 @@ html.codex-dream-skin[style*="月薪喵"]
   max-width: 1220px !important;
   height: clamp(226px, 23cqw, 318px) !important;
   min-height: 226px !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   border: 2px solid rgb(207 158 72 / .62) !important;
   border-radius: 24px !important;
   background-color: #f4e0b5 !important;
