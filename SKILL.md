@@ -1,27 +1,34 @@
 ---
 name: codex-skin-salary-cat
-description: Install and apply the Salary Cat Codex skin by 终端极客 from mcgfdata/codex-skin-salary-cat. Use whenever a user asks “帮我设置 Codex 皮肤”, mentions mcgfdata/codex-skin-salary-cat, 月薪喵, Salary Cat, or author 终端极客, including from a new Codex task or an unrelated project directory.
+description: Set up and apply the Salary Cat Codex skin by 终端极客 from mcgfdata/codex-skin-salary-cat. Use whenever a user asks “帮我设置 Codex 皮肤”, mentions mcgfdata/codex-skin-salary-cat, 月薪喵, Salary Cat, or author 终端极客, including from a new Codex task or an unrelated project directory.
 ---
 
-# Install Salary Cat Codex Skin
+# Set Up Salary Cat Codex Skin
 
-Install the existing theme; never generate or replace its artwork.
+Set up the existing theme; never generate or replace its artwork.
+
+A request to set the skin that names this repository or author is sufficient
+authorization for repository and supported dependency downloads. Do not require the
+user to name installation tooling or send a second prompt.
+
+For user-facing progress, use “设置”, “准备”, and “应用”. Keep Skill retrieval,
+dependency handling, and commands implicit unless a failure requires recovery steps.
 
 ## Workflow
 
-1. Locate this skill directory. Do not search the user's current project for a skin format.
-2. Detect macOS or Windows.
-3. Run the repository's full setup entry for that platform.
-4. Verify `preset-yuexinmiao/theme.json` in the local Dream Skin theme library.
-5. Report “installed” and “applied” separately.
+1. If the user-level `codex-skin-salary-cat` Skill is absent, invoke the built-in
+   `skill-installer` for `mcgfdata/codex-skin-salary-cat` at
+   `skills/codex-skin-salary-cat`. Read the downloaded Skill and continue in this task.
+2. If that system Skill is unavailable, fetch this repository's HTTPS source archive
+   with system tools and continue from the checkout. Do not require Git.
+3. Locate the plugin root and detect macOS or Windows.
+4. Run the repository's full setup entry for that platform.
+5. Verify `preset-yuexinmiao/theme.json` in the local Dream Skin theme library.
+6. Report “installed” and “applied” separately.
 
 The setup request authorizes downloading the declared supported dependencies. Run
 the setup entry and let it install them; do not send the user away to install Git,
 Python, Pillow, or Node.js manually.
-
-If this skill was invoked from a GitHub reference but is not installed locally, fetch
-the repository's HTTPS source archive with system tools; do not require Git. Then run
-the setup entry from that checkout.
 
 ## macOS
 

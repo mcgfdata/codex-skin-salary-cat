@@ -72,6 +72,22 @@ def validate_install_manifest() -> None:
     runtime = manifest.get("runtime")
     if not isinstance(runtime, dict) or runtime.get("schemaVersion") != 1:
         fail("codex-install.json has an invalid runtime declaration")
+    bootstrap = manifest.get("bootstrap")
+    if not isinstance(bootstrap, dict):
+        fail("codex-install.json must declare the fresh-user bootstrap")
+    if bootstrap.get("systemSkill") != "skill-installer":
+        fail("fresh-user bootstrap must use the built-in skill-installer")
+    if bootstrap.get("repositoryPath") != "skills/codex-skin-salary-cat":
+        fail("fresh-user bootstrap has an invalid Skill path")
+    if bootstrap.get("continueInCurrentTask") is not True:
+        fail("fresh-user bootstrap must continue in the current task")
+    trigger_prompt = bootstrap.get("triggerPrompt", "")
+    if (
+        "设置 Codex 皮肤" not in trigger_prompt
+        or "skill-installer" in trigger_prompt
+        or "安装" in trigger_prompt
+    ):
+        fail("public trigger prompt must remain setup-only")
     platforms = manifest.get("platforms")
     if not isinstance(platforms, dict):
         fail("codex-install.json must declare platform setup commands")

@@ -2,6 +2,12 @@
 
 All notable changes to this project are recorded here.
 
+## 0.3.1 - 2026-07-19
+
+- Added a fresh-user self-bootstrap contract for the built-in `skill-installer`.
+- Treat the public “设置 Codex 皮肤” wording as authorization for the complete flow.
+- Continue from Skill retrieval to the platform bootstrap in the same task, with an HTTPS archive fallback.
+
 ## 0.3.0 - 2026-07-19
 
 - Removed Git as an installation prerequisite by using official HTTPS archives.

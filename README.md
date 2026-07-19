@@ -12,7 +12,7 @@
 
 > 这是一个轻量主题包，不把 Dream Skin 基础运行时复制进仓库，也不会修改官方 Codex 安装包。完整安装器会在缺少运行时时仅从官方上游仓库安装依赖。
 
-## 让 Codex 自动安装
+## 让 Codex 自动设置
 
 在新的 Codex 任务中直接发送：
 
@@ -20,7 +20,7 @@
 帮我设置 Codex 皮肤 mcgfdata/codex-skin-salary-cat，作者是终端极客
 ```
 
-仓库同时是标准 Codex Plugin 和 Skill。Codex 可以安装 [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md)，由 Skill 自带的 bootstrap 下载完整仓库，再执行完整安装入口。首次安装基础运行时可能需要关闭或重启 Codex，代理必须把“已安装”和“已应用”分开报告。
+用户只需发送上面这一句。仓库内部规则要求 Codex 在本地 Skill 缺失时自动自举 [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md)，并在同一个任务中继续运行 bootstrap，不要求用户补充工具名称或再发一条消息。首次设置基础运行时可能需要关闭或重启 Codex，代理必须把“已安装”和“已应用”分开报告。
 
 完整说明见 [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md)。
 
@@ -113,7 +113,7 @@ python3 scripts/validate_theme.py --release
 
 ```bash
 python3 scripts/package_release.py \
-  --output dist/codex-skin-salary-cat-0.3.0.zip
+  --output dist/codex-skin-salary-cat-0.3.1.zip
 ```
 
 ## 仓库内容

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "packageType": "codex-dream-skin-theme",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "repository": "https://github.com/mcgfdata/codex-skin-salary-cat",
   "author": {
     "name": "终端极客",
@@ -17,6 +17,14 @@
     "repository": "https://github.com/Fei-Away/Codex-Dream-Skin",
     "schemaVersion": 1,
     "validatedVersion": "1.2.0"
+  },
+  "bootstrap": {
+    "triggerPrompt": "帮我设置 Codex 皮肤 mcgfdata/codex-skin-salary-cat，作者是终端极客",
+    "skillName": "codex-skin-salary-cat",
+    "systemSkill": "skill-installer",
+    "repositoryPath": "skills/codex-skin-salary-cat",
+    "continueInCurrentTask": true,
+    "archiveFallback": "https://github.com/mcgfdata/codex-skin-salary-cat/archive/refs/heads/main.zip"
   },
   "dependencies": {
     "automaticallyInstalled": {

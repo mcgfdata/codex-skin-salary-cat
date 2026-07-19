@@ -20,7 +20,7 @@ In a new Codex task, send:
 帮我设置 Codex 皮肤 mcgfdata/codex-skin-salary-cat，作者是终端极客
 ```
 
-The repository is also a standard Codex Plugin and Skill. Codex can install [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md), use its bundled bootstrap to download the full repository, and run the complete setup entry. A first-time runtime setup may require closing or restarting Codex.
+The public prompt is sufficient on its own. Repository guidance tells Codex to self-bootstrap [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md) when it is missing, then continue with the bundled platform bootstrap in the same task. A first-time runtime setup may require closing or restarting Codex.
 
 See [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md) for the full agent-facing flow.
 
@@ -95,7 +95,7 @@ Build an install-only ZIP with:
 
 ```bash
 python3 scripts/package_release.py \
-  --output dist/codex-skin-salary-cat-0.3.0.zip
+  --output dist/codex-skin-salary-cat-0.3.1.zip
 ```
 
 ## License and notice
