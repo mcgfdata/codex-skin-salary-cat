@@ -33,6 +33,7 @@ PACKAGE_FILES = [
     "presets/preset-yuexinmiao/theme.json",
     "scripts/install-theme-macos.sh",
     "scripts/install-theme-windows.ps1",
+    "scripts/finish-setup-macos.sh",
     "scripts/setup-skin-macos.sh",
     "skills/codex-skin-salary-cat/SKILL.md",
     "skills/codex-skin-salary-cat/agents/openai.yaml",
@@ -43,6 +44,7 @@ EXECUTABLE_FILES = {
     "Install.command",
     "Setup.command",
     "scripts/install-theme-macos.sh",
+    "scripts/finish-setup-macos.sh",
     "scripts/setup-skin-macos.sh",
     "skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh",
 }

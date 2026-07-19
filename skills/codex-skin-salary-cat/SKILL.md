@@ -32,19 +32,23 @@ Node.js manually.
 ## macOS
 
 Before an action that may restart Codex, tell the user. Run `Setup.command` from
-the plugin root for complete setup. When the base runtime completion marker
-already exists, avoid restarting the current task by running:
+the plugin root for normal setup. When the base runtime is missing while Codex is
+open, it presents one native confirmation and delegates completion to `launchd`.
+The background job uses the upstream runtime to close Codex safely, finishes setup,
+applies Salary Cat, and reopens Codex automatically. Never tell the user to close
+Codex and then run a command.
+
+Only when the user explicitly asks not to restart, run:
 
 ```bash
 ./scripts/setup-skin-macos.sh --no-apply
 ```
 
-That command installs Salary Cat and selects it for the next Dream Skin launch.
-During first-time runtime setup, it prepares the theme files but may require the
-user to close Codex and rerun `Setup.command`; report “installed, not applied”.
+Report that this opt-out leaves first-time runtime setup incomplete.
 
-For a standalone Skill installation, run `scripts/bootstrap-macos.sh` from the
-installed Skill directory. Do not ask for Git, Python, Pillow, or separate Node.js.
+For a standalone Skill setup, run `scripts/bootstrap-macos.sh` from the installed
+Skill directory. Do not expose that command to the user and do not ask for Git,
+Python, Pillow, or separate Node.js.
 
 ## Windows
 

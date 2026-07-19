@@ -36,22 +36,24 @@ The user's setup request authorizes installing the official prerequisite from
 `Fei-Away/Codex-Dream-Skin`. Before an action that may restart Codex, tell the user.
 Do not ask for Git, Python, Pillow, or a separate Node.js installation on macOS.
 
-For a complete setup that may restart Codex as its final action:
+For normal setup, run:
 
 ```bash
 ./Setup.command
 ```
 
-When the base runtime completion marker already exists, install and select Salary
-Cat for the next Dream Skin launch without restarting the current task:
+If the runtime is missing while Codex is open, this entry presents one native
+confirmation and delegates the remaining work to a one-shot `launchd` job. It safely
+closes Codex through the upstream runtime, completes setup, applies Salary Cat, and
+reopens Codex automatically. Never ask the user to run a command after closing Codex.
+
+Only when the user explicitly asks not to restart, prepare without applying:
 
 ```bash
 ./scripts/setup-skin-macos.sh --no-apply
 ```
 
-During first-time runtime setup, this command installs the theme files first. If
-Codex is open, report “installed, not applied” and ask the user to close Codex and
-rerun `Setup.command`; do not claim the prerequisite is complete.
+Report that this opt-out leaves first-time runtime setup incomplete.
 
 Verify:
 

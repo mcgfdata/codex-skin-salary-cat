@@ -22,6 +22,10 @@
 
 用户只需发送上面这一句。仓库内部规则要求 Codex 在本地 Skill 缺失时自动自举 [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md)，并在同一个任务中继续运行 bootstrap，不要求用户补充工具名称或再发一条消息。首次设置基础运行时可能需要关闭或重启 Codex，代理必须把“已安装”和“已应用”分开报告。
 
+### macOS 一键完成
+
+首次设置时只需在系统弹窗点击一次「继续设置」。之后 Codex 会自动退出一次，后台按照官方 Dream Skin 模板完成基础配置、应用月薪喵并重新打开；用户不需要打开终端、复制路径或在退出后执行命令。设置失败时会自动重新打开原版 Codex。
+
 完整说明见 [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md)。
 
 ## 兼容性
@@ -50,7 +54,7 @@
 
 Python 3.10 和 Pillow 只用于维护者重新生成 `background.jpg`，普通用户安装皮肤不会用到。
 
-首次安装时，如果 Codex 正在运行，`Setup` 会先完成能安全执行的依赖下载和主题文件安装，再提示退出 Codex。退出后重跑同一入口即可完成基础运行时和主题应用；安装器不会绕过上游对 `config.toml` 的保护。
+macOS 首次设置时，如果 Codex 正在运行，`Setup` 会先准备依赖和主题文件，再通过一次性后台任务自动完成退出、配置、应用和重新打开；不会绕过上游对 `config.toml` 的保护。
 
 ## 安装
 
@@ -113,7 +117,7 @@ python3 scripts/validate_theme.py --release
 
 ```bash
 python3 scripts/package_release.py \
-  --output dist/codex-skin-salary-cat-0.3.1.zip
+  --output dist/codex-skin-salary-cat-0.3.2.zip
 ```
 
 ## 仓库内容

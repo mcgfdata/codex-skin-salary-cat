@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "packageType": "codex-dream-skin-theme",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "repository": "https://github.com/mcgfdata/codex-skin-salary-cat",
   "author": {
     "name": "终端极客",
@@ -48,6 +48,8 @@
       "installOnlyCommand": "./scripts/install-theme-macos.sh --no-apply",
       "fullSetupCommand": "./Setup.command",
       "safeSetupCommand": "./scripts/setup-skin-macos.sh --no-apply",
+      "automaticResumeAfterQuit": true,
+      "restartPolicy": "one-confirmation-auto-restart",
       "themeDirectory": "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao"
     },
     "windows": {

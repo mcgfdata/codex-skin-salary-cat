@@ -25,10 +25,11 @@ jobs:
       - name: Require reproducible generated files
         run: git diff --exit-code -- presets/preset-yuexinmiao
       - name: Check shell syntax
-        run: bash -n Install.command Setup.command scripts/install-theme-macos.sh scripts/setup-skin-macos.sh skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh
+        run: bash -n Install.command Setup.command scripts/install-theme-macos.sh scripts/finish-setup-macos.sh scripts/setup-skin-macos.sh skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh
       - name: Check full setup dry run
         run: |
           ./scripts/setup-skin-macos.sh --dry-run
+          ./scripts/finish-setup-macos.sh --dry-run
           ./skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh --dry-run
       - name: Check Windows PowerShell source encoding
         run: |
@@ -51,6 +52,7 @@ jobs:
               for suffix in (
                   '/Install.command',
                   '/Setup.command',
+                  '/scripts/finish-setup-macos.sh',
                   '/scripts/setup-skin-macos.sh',
                   '/skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh',
               ):

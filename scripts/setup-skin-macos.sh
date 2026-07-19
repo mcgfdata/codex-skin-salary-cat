@@ -15,6 +15,14 @@ fail() {
   exit 1
 }
 
+assert_no_symlink_components() {
+  local candidate="$1"
+  while [ "$candidate" != "/" ]; do
+    [ ! -L "$candidate" ] || fail "路径不能包含符号链接: $candidate"
+    candidate="$(/usr/bin/dirname "$candidate")"
+  done
+}
+
 cleanup() {
   [ -z "$TEMPORARY" ] || /bin/rm -rf "$TEMPORARY"
 }
@@ -41,12 +49,62 @@ base_runtime_is_ready() {
   [ "$(/usr/bin/plutil -extract configPath raw -o - "$BASE_COMPLETION_MARKER" 2>/dev/null || true)" = "$HOME_ROOT/.codex/config.toml" ]
 }
 
+codex_is_running() {
+  [ "$(/usr/bin/osascript -e 'application id "com.openai.codex" is running' 2>/dev/null || true)" = "true" ]
+}
+
+confirm_one_time_restart() {
+  /usr/bin/osascript <<'APPLESCRIPT' >/dev/null
+display dialog "月薪喵已经准备好。Codex 接下来会自动退出并重新打开一次，无需使用终端或执行命令。" buttons {"稍后", "继续设置"} default button "继续设置" cancel button "稍后" with title "月薪喵 Codex 皮肤"
+APPLESCRIPT
+}
+
+schedule_deferred_setup() {
+  local upstream_archive="$1"
+  local deferred_root="$HOME_ROOT/Library/Application Support/CodexSalaryCatSetup"
+  local pending=""
+  local project_copy=""
+  local helper=""
+  local log_path="$HOME_ROOT/Library/Logs/Codex Salary Cat Setup.log"
+  local label="com.terminalgeek.salary-cat-setup.$$.${RANDOM:-0}"
+
+  assert_no_symlink_components "$deferred_root"
+  /bin/mkdir -p "$deferred_root" "$HOME_ROOT/Library/Logs"
+  /bin/chmod 700 "$deferred_root"
+  pending="$(/usr/bin/mktemp -d "$deferred_root/pending.XXXXXX")"
+  project_copy="$pending/project"
+  /bin/mkdir -p "$project_copy/scripts" "$project_copy/presets/$PRESET_ID"
+  /bin/cp "$PROJECT_ROOT/scripts/install-theme-macos.sh" "$project_copy/scripts/"
+  /bin/cp "$PROJECT_ROOT/presets/$PRESET_ID/background.jpg" \
+    "$PROJECT_ROOT/presets/$PRESET_ID/theme.json" "$project_copy/presets/$PRESET_ID/"
+  /bin/cp "$PROJECT_ROOT/scripts/finish-setup-macos.sh" "$pending/"
+  /bin/cp "$upstream_archive" "$pending/Codex-Dream-Skin.zip"
+  /bin/chmod 700 "$pending" "$project_copy" "$project_copy/scripts" \
+    "$project_copy/scripts/install-theme-macos.sh" "$pending/finish-setup-macos.sh"
+  /bin/chmod 600 "$pending/Codex-Dream-Skin.zip" \
+    "$project_copy/presets/$PRESET_ID/background.jpg" \
+    "$project_copy/presets/$PRESET_ID/theme.json"
+
+  if ! confirm_one_time_restart; then
+    /bin/rm -rf "$pending"
+    printf '已保留月薪喵主题文件，本次没有重启 Codex。\n'
+    return 1
+  fi
+
+  helper="$pending/finish-setup-macos.sh"
+  /bin/launchctl submit -l "$label" -o "$log_path" -e "$log_path" -- \
+    /usr/bin/env "HOME=$HOME_ROOT" /bin/bash "$helper" "$pending" "$label"
+  printf '月薪喵已准备完成；Codex 将自动重启一次并完成应用，无需执行任何命令。\n'
+}
+
 if [ "$DRY_RUN" = "true" ]; then
   printf '会检测基础运行时：%s\n' "$BASE_SWITCH"
   printf '会检测安装完成标记：%s\n' "$BASE_COMPLETION_MARKER"
   printf '缺失时会从官方仓库下载：%s\n' "$UPSTREAM_ARCHIVE_URL"
   printf '安装不需要 Git、Python 或额外 Node.js。\n'
+  printf '首次设置会在确认后自动重启 Codex 一次，无需退出后执行命令。\n'
   printf '会安装主题：%s\n' "$PROJECT_ROOT/presets/$PRESET_ID"
+  "$PROJECT_ROOT/scripts/finish-setup-macos.sh" --dry-run
   exit 0
 fi
 
@@ -60,8 +118,20 @@ if ! base_runtime_is_ready; then
   /usr/bin/ditto -x -k "$TEMPORARY/Codex-Dream-Skin.zip" "$TEMPORARY"
   RUNTIME_INSTALLER="$TEMPORARY/Codex-Dream-Skin-main/macos/scripts/install-dream-skin-macos.sh"
   [ -f "$RUNTIME_INSTALLER" ] || fail "官方基础运行时安装器缺失"
+
+  if codex_is_running; then
+    if [ "$APPLY_NOW" = "true" ]; then
+      if schedule_deferred_setup "$TEMPORARY/Codex-Dream-Skin.zip"; then
+        exit 0
+      fi
+      exit 0
+    fi
+    printf '月薪喵主题已准备好；本次按要求不重启 Codex。\n'
+    exit 0
+  fi
+
   if ! /bin/bash "$RUNTIME_INSTALLER" --no-launch; then
-    fail "主题文件已安装，但基础运行时尚未完成。请完全退出 Codex 后重新运行 Setup.command"
+    fail "官方基础运行时设置未完成"
   fi
 fi
 

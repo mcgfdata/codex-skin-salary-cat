@@ -22,6 +22,8 @@ In a new Codex task, send:
 
 The public prompt is sufficient on its own. Repository guidance tells Codex to self-bootstrap [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md) when it is missing, then continue with the bundled platform bootstrap in the same task. A first-time runtime setup may require closing or restarting Codex.
 
+On macOS, first-time setup shows one native confirmation, then automatically closes Codex, completes the official Dream Skin configuration in a one-shot background job, applies Salary Cat, and reopens Codex. Users never need to run a command after quitting the app.
+
 See [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md) for the full agent-facing flow.
 
 ## Compatibility
@@ -95,7 +97,7 @@ Build an install-only ZIP with:
 
 ```bash
 python3 scripts/package_release.py \
-  --output dist/codex-skin-salary-cat-0.3.1.zip
+  --output dist/codex-skin-salary-cat-0.3.2.zip
 ```
 
 ## License and notice

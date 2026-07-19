@@ -2,6 +2,12 @@
 
 All notable changes to this project are recorded here.
 
+## 0.3.2 - 2026-07-19
+
+- Added one-confirmation macOS setup with automatic quit, completion, theme apply, and relaunch.
+- Delegated first-time completion to a one-shot `launchd` job so users never run a command after quitting Codex.
+- Reused the upstream Dream Skin identity checks and safe restart workflow for deferred setup.
+
 ## 0.3.1 - 2026-07-19
 
 - Added a fresh-user self-bootstrap contract for the built-in `skill-installer`.

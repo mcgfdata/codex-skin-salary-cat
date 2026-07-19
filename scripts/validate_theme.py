@@ -95,6 +95,10 @@ def validate_install_manifest() -> None:
         fail("codex-install.json has an invalid macOS setup command")
     if "theme-backup.json" not in platforms.get("macos", {}).get("detectRuntimeMarker", ""):
         fail("codex-install.json must declare the macOS runtime completion marker")
+    if platforms.get("macos", {}).get("automaticResumeAfterQuit") is not True:
+        fail("macOS setup must resume automatically after Codex quits")
+    if platforms.get("macos", {}).get("restartPolicy") != "one-confirmation-auto-restart":
+        fail("macOS setup must declare its one-confirmation restart policy")
     if "Setup.ps1" not in platforms.get("windows", {}).get("fullSetupCommand", ""):
         fail("codex-install.json has an invalid Windows setup command")
     if "appearance.json" not in platforms.get("windows", {}).get("detectRuntimeMarker", ""):
@@ -130,6 +134,7 @@ def validate_install_manifest() -> None:
     for setup_path in (
         ROOT / "Setup.command",
         ROOT / "Setup.ps1",
+        ROOT / "scripts" / "finish-setup-macos.sh",
         ROOT / "scripts" / "setup-skin-macos.sh",
         ROOT / "skills" / "codex-skin-salary-cat" / "scripts" / "bootstrap-macos.sh",
         ROOT / "skills" / "codex-skin-salary-cat" / "scripts" / "bootstrap-windows.ps1",
@@ -138,11 +143,20 @@ def validate_install_manifest() -> None:
             fail(f"full setup entry is missing: {setup_path}")
 
     macos_setup = (ROOT / "scripts" / "setup-skin-macos.sh").read_text(encoding="utf-8")
+    macos_finish = (ROOT / "scripts" / "finish-setup-macos.sh").read_text(encoding="utf-8")
     windows_setup = (ROOT / "Setup.ps1").read_text(encoding="utf-8-sig")
     if "git clone" in macos_setup or "git.exe" in windows_setup:
         fail("full setup must not require Git")
     if "SHASUMS256.txt" not in windows_setup or "Get-FileHash" not in windows_setup:
         fail("Windows portable Node.js download must verify the official SHA-256")
+    if "launchctl submit" not in macos_setup or "finish-setup-macos.sh" not in macos_setup:
+        fail("macOS first-time setup must delegate completion to launchd")
+    if "stop_codex true" not in macos_finish or "--no-launch" not in macos_finish:
+        fail("macOS deferred setup must reuse the upstream safe restart workflow")
+    if "launchctl remove" not in macos_finish:
+        fail("macOS deferred setup must unregister its one-shot launchd job")
+    if '"$BASE_SWITCH" --id preset-yuexinmiao' not in macos_finish or "ACTIVE_THEME_JSON" not in macos_finish:
+        fail("macOS deferred setup must require and verify the active Salary Cat theme")
 
 
 def validate_text(theme: dict[str, object], key: str, maximum: int) -> None:

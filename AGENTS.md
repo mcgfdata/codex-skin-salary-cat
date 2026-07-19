@@ -31,10 +31,11 @@ Use the complete setup entry:
 - macOS: `./Setup.command`
 - Windows: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Setup.ps1`
 
-When the macOS runtime completion marker already exists, avoid restarting the active
-task by running `./scripts/setup-skin-macos.sh --no-apply`. During first-time runtime
-setup, prepare the theme and clearly report when Codex must be closed before setup can
-finish.
+On macOS, use the complete setup entry for normal requests. During first-time runtime
+setup, it presents one native confirmation, hands the remaining work to `launchd`,
+uses upstream `stop_codex true`, and reopens Codex with Salary Cat. Never tell the user
+to close Codex and then run a command. Use `--no-apply` only when the user explicitly
+asks to avoid a restart and accepts that setup remains incomplete.
 
 Automatically install supported dependencies. macOS needs no external Git, Python,
 Pillow, or Node.js. Windows automatically installs a verified user-level Node.js 22
