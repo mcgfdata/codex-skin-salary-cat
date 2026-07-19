@@ -35,12 +35,16 @@ For a complete setup that may restart Codex as its final action:
 ./Setup.command
 ```
 
-To finish the current task without restarting Codex, install everything and select
-Salary Cat for the next Dream Skin launch:
+When the base runtime completion marker already exists, install and select Salary
+Cat for the next Dream Skin launch without restarting the current task:
 
 ```bash
 ./scripts/setup-skin-macos.sh --no-apply
 ```
+
+During first-time runtime setup, this command installs the theme files first. If
+Codex is open, report “installed, not applied” and ask the user to close Codex and
+rerun `Setup.command`; do not claim the prerequisite is complete.
 
 Verify:
 
