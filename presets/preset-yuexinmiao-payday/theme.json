@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "preset-yuexinmiao-payday",
+  "name": "月薪喵 · 今日营业",
+  "brandSubtitle": "CODE · COFFEE · PAYDAY",
+  "tagline": "代码会写完，工资也会到账的喵",
+  "projectPrefix": "选择项目 · ",
+  "projectLabel": "◉  选择项目",
+  "statusText": "薪资到账了吗？",
+  "quote": "等工资中...",
+  "image": "background.jpg",
+  "appearance": "auto",
+  "art": {
+    "focusX": 0.76,
+    "focusY": 0.86,
+    "safeArea": "left",
+    "taskMode": "banner"
+  },
+  "colors": {
+    "background": "#fff8e5",
+    "panel": "#fffdf3",
+    "panelAlt": "#f8edca",
+    "accent": "#d99032",
+    "accentAlt": "#efad4d",
+    "secondary": "#8aa35b",
+    "highlight": "#b06a2c",
+    "text": "#4e3827",
+    "muted": "#806b52",
+    "line": "rgba(190, 143, 56, .30)"
+  }
+}

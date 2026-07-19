@@ -10,15 +10,20 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PRESET_ID = "preset-yuexinmiao"
+DEFAULT_PRESET_ID = "preset-yuexinmiao"
+PRESET_IDS = (
+    DEFAULT_PRESET_ID,
+    "preset-yuexinmiao-payday",
+)
 MANIFEST_PATH = ROOT / "codex-install.json"
 PLUGIN_PATH = ROOT / ".codex-plugin" / "plugin.json"
-PRESET_DIR = ROOT / "presets" / PRESET_ID
 SOURCE = ROOT / "source" / "salary-cat-source.png"
-THEME_PATH = PRESET_DIR / "theme.json"
 EXPECTED_PRESET_FILES = {"background.jpg", "theme.json"}
 EXPECTED_SOURCE_SIZE = (1942, 809)
-EXPECTED_BACKGROUND_SIZE = (2560, 1440)
+EXPECTED_BACKGROUND_SIZES = {
+    "preset-yuexinmiao": (2560, 1440),
+    "preset-yuexinmiao-payday": (2240, 1600),
+}
 MAX_IMAGE_BYTES = 16 * 1024 * 1024
 MAX_IMAGE_PIXELS = 50_000_000
 REQUIRED_COLORS = {
@@ -41,11 +46,11 @@ def fail(message: str) -> None:
     raise SystemExit(f"theme validation failed: {message}")
 
 
-def read_theme() -> dict[str, object]:
+def read_theme(theme_path: Path) -> dict[str, object]:
     try:
-        raw = json.loads(THEME_PATH.read_text(encoding="utf-8"))
+        raw = json.loads(theme_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
-        fail(f"invalid UTF-8 JSON in {THEME_PATH}: {error}")
+        fail(f"invalid UTF-8 JSON in {theme_path}: {error}")
     if not isinstance(raw, dict):
         fail("theme.json must contain an object")
     return raw
@@ -67,8 +72,22 @@ def validate_install_manifest() -> None:
     if not isinstance(author, dict) or author.get("name") != "终端极客" or author.get("github") != "mcgfdata":
         fail("codex-install.json has an unexpected author")
     theme = manifest.get("theme")
-    if not isinstance(theme, dict) or theme.get("id") != PRESET_ID:
+    if not isinstance(theme, dict) or theme.get("id") != DEFAULT_PRESET_ID:
         fail("codex-install.json has an unexpected theme id")
+    themes = manifest.get("themes")
+    if not isinstance(themes, list) or len(themes) != len(PRESET_IDS):
+        fail("codex-install.json must declare both selectable themes")
+    declared_ids = [item.get("id") for item in themes if isinstance(item, dict)]
+    if declared_ids != list(PRESET_IDS):
+        fail("codex-install.json theme order or ids are invalid")
+    for index, (item, preset_id) in enumerate(zip(themes, PRESET_IDS, strict=True)):
+        if item.get("presetDirectory") != f"presets/{preset_id}":
+            fail(f"codex-install.json has an invalid preset directory for {preset_id}")
+        if item.get("default") is not (index == 0):
+            fail(f"codex-install.json has an invalid default flag for {preset_id}")
+    selection = manifest.get("selection")
+    if not isinstance(selection, dict) or selection.get("defaultThemeId") != DEFAULT_PRESET_ID:
+        fail("codex-install.json has an invalid theme selection contract")
     runtime = manifest.get("runtime")
     if not isinstance(runtime, dict) or runtime.get("schemaVersion") != 1:
         fail("codex-install.json has an invalid runtime declaration")
@@ -99,10 +118,22 @@ def validate_install_manifest() -> None:
         fail("macOS setup must resume automatically after Codex quits")
     if platforms.get("macos", {}).get("restartPolicy") != "one-confirmation-auto-restart":
         fail("macOS setup must declare its one-confirmation restart policy")
+    macos_theme_dirs = platforms.get("macos", {}).get("themeDirectories")
+    if not isinstance(macos_theme_dirs, list) or not all(
+        directory.endswith(preset_id)
+        for directory, preset_id in zip(macos_theme_dirs, PRESET_IDS, strict=False)
+    ) or len(macos_theme_dirs) != len(PRESET_IDS):
+        fail("codex-install.json has invalid macOS theme directories")
     if "Setup.ps1" not in platforms.get("windows", {}).get("fullSetupCommand", ""):
         fail("codex-install.json has an invalid Windows setup command")
     if "appearance.json" not in platforms.get("windows", {}).get("detectRuntimeMarker", ""):
         fail("codex-install.json must declare the Windows runtime completion marker")
+    windows_theme_dirs = platforms.get("windows", {}).get("themeDirectories")
+    if not isinstance(windows_theme_dirs, list) or not all(
+        directory.endswith(preset_id)
+        for directory, preset_id in zip(windows_theme_dirs, PRESET_IDS, strict=False)
+    ) or len(windows_theme_dirs) != len(PRESET_IDS):
+        fail("codex-install.json has invalid Windows theme directories")
     dependencies = manifest.get("dependencies")
     if not isinstance(dependencies, dict):
         fail("codex-install.json must declare installation dependencies")
@@ -155,8 +186,11 @@ def validate_install_manifest() -> None:
         fail("macOS deferred setup must reuse the upstream safe restart workflow")
     if "launchctl remove" not in macos_finish:
         fail("macOS deferred setup must unregister its one-shot launchd job")
-    if '"$BASE_SWITCH" --id preset-yuexinmiao' not in macos_finish or "ACTIVE_THEME_JSON" not in macos_finish:
+    if DEFAULT_PRESET_ID not in macos_finish or "ACTIVE_THEME_JSON" not in macos_finish:
         fail("macOS deferred setup must require and verify the active Salary Cat theme")
+    for preset_id in PRESET_IDS:
+        if preset_id not in macos_setup or preset_id not in macos_finish:
+            fail(f"macOS setup does not stage and verify {preset_id}")
 
 
 def validate_text(theme: dict[str, object], key: str, maximum: int) -> None:
@@ -167,21 +201,24 @@ def validate_text(theme: dict[str, object], key: str, maximum: int) -> None:
         fail(f"{key} must be a single line without control characters")
 
 
-def validate_theme(release: bool) -> None:
-    validate_install_manifest()
-    if not PRESET_DIR.is_dir():
-        fail(f"missing preset directory: {PRESET_DIR}")
-    actual_files = {path.name for path in PRESET_DIR.iterdir() if path.is_file()}
+def validate_preset(preset_id: str) -> int:
+    preset_dir = ROOT / "presets" / preset_id
+    if not preset_dir.is_dir():
+        fail(f"missing preset directory: {preset_dir}")
+    actual_files = {path.name for path in preset_dir.iterdir() if path.is_file()}
     if actual_files != EXPECTED_PRESET_FILES:
-        fail(f"preset must contain exactly {sorted(EXPECTED_PRESET_FILES)}, got {sorted(actual_files)}")
-    if any(path.is_symlink() for path in PRESET_DIR.iterdir()):
-        fail("preset files and directories must not be symbolic links")
+        fail(
+            f"{preset_id} must contain exactly {sorted(EXPECTED_PRESET_FILES)}, "
+            f"got {sorted(actual_files)}"
+        )
+    if any(path.is_symlink() for path in preset_dir.iterdir()):
+        fail(f"{preset_id} files and directories must not be symbolic links")
 
-    theme = read_theme()
+    theme = read_theme(preset_dir / "theme.json")
     if theme.get("schemaVersion") != 1:
         fail("schemaVersion must be 1")
-    if theme.get("id") != PRESET_ID:
-        fail(f"theme id must be {PRESET_ID}")
+    if theme.get("id") != preset_id:
+        fail(f"theme id must be {preset_id}")
     if theme.get("image") != "background.jpg":
         fail("image must be the local filename background.jpg")
     if theme.get("appearance") not in {"auto", "light", "dark"}:
@@ -221,16 +258,31 @@ def validate_theme(release: bool) -> None:
         if not pattern.fullmatch(value):
             fail(f"colors.{key} has an unsupported format: {value!r}")
 
-    image_path = PRESET_DIR / "background.jpg"
+    image_path = preset_dir / "background.jpg"
     image_bytes = image_path.stat().st_size
     if not 0 < image_bytes <= MAX_IMAGE_BYTES:
         fail("background.jpg must be non-empty and no larger than 16 MB")
     with Image.open(image_path) as image:
         image.load()
-        if image.format != "JPEG" or image.size != EXPECTED_BACKGROUND_SIZE:
-            fail(f"background must be a {EXPECTED_BACKGROUND_SIZE[0]}x{EXPECTED_BACKGROUND_SIZE[1]} JPEG")
+        expected_size = EXPECTED_BACKGROUND_SIZES[preset_id]
+        if image.format != "JPEG" or image.size != expected_size:
+            fail(f"{preset_id} background must be a {expected_size[0]}x{expected_size[1]} JPEG")
         if image.width * image.height > MAX_IMAGE_PIXELS:
             fail("background exceeds the 50-megapixel runtime limit")
+    return image_bytes
+
+
+def validate_theme(release: bool) -> None:
+    validate_install_manifest()
+    preset_dirs = {
+        path.name
+        for path in (ROOT / "presets").iterdir()
+        if path.is_dir() and path.name.startswith("preset-")
+    }
+    if preset_dirs != set(PRESET_IDS):
+        fail(f"expected presets {sorted(PRESET_IDS)}, got {sorted(preset_dirs)}")
+
+    image_sizes = {preset_id: validate_preset(preset_id) for preset_id in PRESET_IDS}
 
     with Image.open(SOURCE) as source:
         source.load()
@@ -252,11 +304,12 @@ def validate_theme(release: bool) -> None:
             fail("ASSET-LICENSE.md still contains TODO fields")
 
     mode = "release" if release else "development"
-    print(f"theme validation passed ({mode}): {PRESET_ID}, {image_bytes} bytes")
+    summary = ", ".join(f"{preset_id} ({image_sizes[preset_id]} bytes)" for preset_id in PRESET_IDS)
+    print(f"theme validation passed ({mode}): {summary}")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate the Salary Cat Dream Skin preset.")
+    parser = argparse.ArgumentParser(description="Validate the Salary Cat Dream Skin presets.")
     parser.add_argument("--release", action="store_true", help="also require approved artwork rights")
     args = parser.parse_args()
     validate_theme(release=args.release)

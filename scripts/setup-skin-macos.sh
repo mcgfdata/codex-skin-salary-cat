@@ -4,7 +4,11 @@ set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd -P)"
 UPSTREAM_ARCHIVE_URL="https://github.com/Fei-Away/Codex-Dream-Skin/archive/refs/heads/main.zip"
-PRESET_ID="preset-yuexinmiao"
+DEFAULT_PRESET_ID="preset-yuexinmiao"
+PRESET_IDS=(
+  "preset-yuexinmiao"
+  "preset-yuexinmiao-payday"
+)
 APPLY_NOW="true"
 DRY_RUN="false"
 TEMPORARY=""
@@ -67,23 +71,30 @@ schedule_deferred_setup() {
   local helper=""
   local log_path="$HOME_ROOT/Library/Logs/Codex Salary Cat Setup.log"
   local label="com.terminalgeek.salary-cat-setup.$$.${RANDOM:-0}"
+  local preset_id=""
 
   assert_no_symlink_components "$deferred_root"
   /bin/mkdir -p "$deferred_root" "$HOME_ROOT/Library/Logs"
   /bin/chmod 700 "$deferred_root"
   pending="$(/usr/bin/mktemp -d "$deferred_root/pending.XXXXXX")"
   project_copy="$pending/project"
-  /bin/mkdir -p "$project_copy/scripts" "$project_copy/presets/$PRESET_ID"
+  /bin/mkdir -p "$project_copy/scripts"
   /bin/cp "$PROJECT_ROOT/scripts/install-theme-macos.sh" "$project_copy/scripts/"
-  /bin/cp "$PROJECT_ROOT/presets/$PRESET_ID/background.jpg" \
-    "$PROJECT_ROOT/presets/$PRESET_ID/theme.json" "$project_copy/presets/$PRESET_ID/"
+  for preset_id in "${PRESET_IDS[@]}"; do
+    /bin/mkdir -p "$project_copy/presets/$preset_id"
+    /bin/cp "$PROJECT_ROOT/presets/$preset_id/background.jpg" \
+      "$PROJECT_ROOT/presets/$preset_id/theme.json" "$project_copy/presets/$preset_id/"
+  done
   /bin/cp "$PROJECT_ROOT/scripts/finish-setup-macos.sh" "$pending/"
   /bin/cp "$upstream_archive" "$pending/Codex-Dream-Skin.zip"
   /bin/chmod 700 "$pending" "$project_copy" "$project_copy/scripts" \
     "$project_copy/scripts/install-theme-macos.sh" "$pending/finish-setup-macos.sh"
-  /bin/chmod 600 "$pending/Codex-Dream-Skin.zip" \
-    "$project_copy/presets/$PRESET_ID/background.jpg" \
-    "$project_copy/presets/$PRESET_ID/theme.json"
+  /bin/chmod 600 "$pending/Codex-Dream-Skin.zip"
+  for preset_id in "${PRESET_IDS[@]}"; do
+    /bin/chmod 700 "$project_copy/presets/$preset_id"
+    /bin/chmod 600 "$project_copy/presets/$preset_id/background.jpg" \
+      "$project_copy/presets/$preset_id/theme.json"
+  done
 
   if ! confirm_one_time_restart; then
     /bin/rm -rf "$pending"
@@ -103,7 +114,7 @@ if [ "$DRY_RUN" = "true" ]; then
   printf '缺失时会从官方仓库下载：%s\n' "$UPSTREAM_ARCHIVE_URL"
   printf '安装不需要 Git、Python 或额外 Node.js。\n'
   printf '首次设置会在确认后自动重启 Codex 一次，无需退出后执行命令。\n'
-  printf '会安装主题：%s\n' "$PROJECT_ROOT/presets/$PRESET_ID"
+  printf '会准备两套样式：%s、%s\n' "${PRESET_IDS[0]}" "${PRESET_IDS[1]}"
   "$PROJECT_ROOT/scripts/finish-setup-macos.sh" --dry-run
   exit 0
 fi
@@ -143,5 +154,5 @@ if [ "$APPLY_NOW" = "true" ]; then
 fi
 
 [ "$THEME_PREPARED" = "true" ] || "$PROJECT_ROOT/scripts/install-theme-macos.sh" --no-apply
-"$BASE_SWITCH" --id "$PRESET_ID" --no-apply
-printf '月薪喵已安装并设为活动主题；下次从 Codex Dream Skin 启动时生效。\n'
+"$BASE_SWITCH" --id "$DEFAULT_PRESET_ID" --no-apply
+printf '两套月薪喵样式已保存，默认样式已设为活动主题；下次从 Codex Dream Skin 启动时生效。\n'

@@ -33,8 +33,10 @@ Use the complete setup entry:
 
 On macOS, use the complete setup entry for normal requests. During first-time runtime
 setup, it presents one native confirmation, hands the remaining work to `launchd`,
-uses upstream `stop_codex true`, and reopens Codex with Salary Cat. Never tell the user
-to close Codex and then run a command. Use `--no-apply` only when the user explicitly
+uses upstream `stop_codex true`, saves both Salary Cat layouts, applies
+`preset-yuexinmiao` by default, and reopens Codex. Tell the user that both layouts are
+available in Dream Skin's saved-theme menu. Never tell the user to close Codex and
+then run a command. Use `--no-apply` only when the user explicitly
 asks to avoid a restart and accepts that setup remains incomplete.
 
 Automatically install supported dependencies. macOS needs no external Git, Python,

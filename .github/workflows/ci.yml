@@ -23,7 +23,7 @@ jobs:
       - run: python scripts/build_presets.py
       - run: python scripts/validate_theme.py
       - name: Require reproducible generated files
-        run: git diff --exit-code -- presets/preset-yuexinmiao
+        run: git diff --exit-code -- presets/preset-yuexinmiao presets/preset-yuexinmiao-payday
       - name: Check shell syntax
         run: bash -n Install.command Setup.command scripts/install-theme-macos.sh scripts/finish-setup-macos.sh scripts/setup-skin-macos.sh skills/codex-skin-salary-cat/scripts/bootstrap-macos.sh
       - name: Check full setup dry run

@@ -4,11 +4,11 @@
 
 Author: 终端极客 · [GitHub repository](https://github.com/mcgfdata/codex-skin-salary-cat)
 
-A single-image theme pack for [Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin).
+A two-layout, single-image theme pack for [Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin).
 
-<p align="center">
-  <img src="./presets/preset-yuexinmiao/background.jpg" alt="Salary Cat theme background preview" width="900">
-</p>
+| Salary Cat (default) | Salary Cat · Open Today (banner) |
+|---|---|
+| <img src="./presets/preset-yuexinmiao/background.jpg" alt="Default Salary Cat layout preview"> | <img src="./presets/preset-yuexinmiao-payday/background.jpg" alt="Salary Cat Open Today banner layout preview"> |
 
 > This lightweight package does not bundle the Dream Skin runtime and does not modify the official Codex installation. The full setup entry obtains the prerequisite only from its official upstream repository when needed.
 
@@ -24,6 +24,8 @@ The public prompt is sufficient on its own. Repository guidance tells Codex to s
 
 On macOS, first-time setup shows one native confirmation, then automatically closes Codex, completes the official Dream Skin configuration in a one-shot background job, applies Salary Cat, and reopens Codex. Users never need to run a command after quitting the app.
 
+Both layouts are saved together. `月薪喵` remains the default, and users can switch to `月薪喵 · 今日营业` from Dream Skin's saved-theme menu without repeating setup.
+
 See [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md) for the full agent-facing flow.
 
 ## Compatibility
@@ -31,9 +33,8 @@ See [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md) for the full agent-facing
 - Theme format: Codex Dream Skin schema version 1
 - Validated with the upstream `1.2.0` runtime payload checker
 - Platforms: macOS and Windows
-- Install locations:
-  - macOS: `~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao`
-  - Windows: `%LOCALAPPDATA%\CodexDreamSkin\themes\preset-yuexinmiao`
+- Theme IDs: `preset-yuexinmiao` (default) and `preset-yuexinmiao-payday` (banner)
+- Theme libraries: macOS `~/Library/Application Support/CodexDreamSkinStudio/themes/`; Windows `%LOCALAPPDATA%\CodexDreamSkin\themes\`
 
 Future upstream schema changes may require a matching update here.
 
@@ -57,7 +58,7 @@ If Codex is running during first-time setup, `Setup` prepares all safe dependenc
    - Windows: double-click [`Setup.cmd`](./Setup.cmd), or run [`Setup.ps1`](./Setup.ps1)
 3. Users who already have the runtime may use `Install.command` / `Install.cmd` for the theme only.
 
-The installer validates the preset before replacing an older copy with the same ID. It applies Salary Cat when a compatible runtime is available; otherwise, it only adds the theme to the saved-theme library.
+The installer validates both presets and publishes them together without touching unrelated saved themes. It applies the default Salary Cat layout when a compatible runtime is available; otherwise, it only adds both layouts to the saved-theme library.
 
 To install without applying:
 
@@ -73,9 +74,9 @@ On macOS, if Gatekeeper blocks the first launch, right-click `Install.command` i
 
 ## Single-image composition
 
-The repository only uses [`source/salary-cat-source.png`](./source/salary-cat-source.png). It does not add another subject or image.
+The repository only uses [`source/salary-cat-source.png`](./source/salary-cat-source.png). It does not add another subject or image; the layout reference screenshot is never packaged as an asset.
 
-The `1942 × 809` source is approximately `2.40:1`, while the Dream Skin background is `2560 × 1440` (`16:9`). The current crop discards roughly 26% of the horizontal frame, almost entirely from the left-side empty space, then scales an effective area of about `1438 × 809` to `2560 × 1440`. It preserves the Salary Cat subject and a usable native-UI safe area, but it does not create real image detail. No inpainting or additional artwork is used.
+The `1942 × 809` source is approximately `2.40:1`. The default layout is `2560 × 1440` and crops roughly 26% of the horizontal frame, mostly left-side whitespace, to enlarge the subject. The banner layout is `2240 × 1600` (`1.40:1`): it preserves the full source width and bottom-aligns it on a sampled pale canvas. Staying below Dream Skin's `1.45` wide-art expansion threshold keeps the native home hero card, while explicit `taskMode: banner` enables the task-page banner. Neither layout uses inpainting or creates image detail.
 
 ## Rebuild and validate
 

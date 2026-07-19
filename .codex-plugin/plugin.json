@@ -1,7 +1,7 @@
 {
   "name": "codex-skin-salary-cat",
   "version": "0.3.2",
-  "description": "Set up and apply the Salary Cat theme for Codex Dream Skin.",
+  "description": "Set up and apply two selectable Salary Cat layouts for Codex Dream Skin.",
   "author": {
     "name": "终端极客",
     "email": "baixin.dev@gmail.com",
@@ -14,8 +14,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "月薪喵 Codex 皮肤",
-    "shortDescription": "自动设置并应用终端极客制作的月薪喵主题",
-    "longDescription": "检测 Codex Dream Skin 基础运行时，准备月薪喵主题，并在平台允许时自动应用。",
+    "shortDescription": "自动设置并应用终端极客制作的月薪喵双布局主题",
+    "longDescription": "检测 Codex Dream Skin 基础运行时，准备两套可切换的月薪喵样式，并自动应用默认样式。",
     "developerName": "终端极客",
     "category": "Developer Tools",
     "capabilities": ["Local theme setup", "macOS", "Windows"],

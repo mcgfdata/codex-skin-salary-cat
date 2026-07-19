@@ -5,7 +5,7 @@ description: Set up and apply the Salary Cat Codex skin by 终端极客 from mcg
 
 # Set Up Salary Cat Codex Skin
 
-Set up the existing theme; never generate or replace its artwork.
+Set up both existing layouts; never generate or replace their shared artwork.
 
 A request to set the skin that names this repository or author authorizes this
 workflow. Do not require the user to name installation tooling or send another prompt.
@@ -22,8 +22,11 @@ dependency handling, and commands implicit unless a failure requires recovery st
    without requiring Git.
 3. Detect macOS or Windows.
 4. Run the resolved plugin root's full setup entry for that platform.
-5. Verify that the installed theme ID is `preset-yuexinmiao`.
-6. Report “installed” and “applied” separately.
+5. Verify that `preset-yuexinmiao` and `preset-yuexinmiao-payday` are both in
+   the local Dream Skin theme library.
+6. Keep `preset-yuexinmiao` as the applied default and report that both layouts
+   are available in Dream Skin's saved-theme menu.
+7. Report “installed” and “applied” separately.
 
 The setup request authorizes supported dependency downloads. Let the setup entry
 install them automatically; do not ask the user to install Git, Python, Pillow, or
@@ -35,8 +38,8 @@ Before an action that may restart Codex, tell the user. Run `Setup.command` from
 the plugin root for normal setup. When the base runtime is missing while Codex is
 open, it presents one native confirmation and delegates completion to `launchd`.
 The background job uses the upstream runtime to close Codex safely, finishes setup,
-applies Salary Cat, and reopens Codex automatically. Never tell the user to close
-Codex and then run a command.
+saves both layouts, applies the default Salary Cat style, and reopens Codex
+automatically. Never tell the user to close Codex and then run a command.
 
 Only when the user explicitly asks not to restart, run:
 

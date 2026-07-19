@@ -29,6 +29,8 @@ PACKAGE_FILES = [
     "VERSION",
     "agents/openai.yaml",
     "codex-install.json",
+    "presets/preset-yuexinmiao-payday/background.jpg",
+    "presets/preset-yuexinmiao-payday/theme.json",
     "presets/preset-yuexinmiao/background.jpg",
     "presets/preset-yuexinmiao/theme.json",
     "scripts/install-theme-macos.sh",

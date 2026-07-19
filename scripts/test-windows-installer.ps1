@@ -21,17 +21,26 @@ try {
   $userPathEntries = @([Environment]::GetEnvironmentVariable('Path', 'User') -split ';')
   if ($userPathEntries -notcontains $nodeRoot) { throw 'portable Node.js was not added to the user PATH' }
 
+  $unrelated = Join-Path $env:LOCALAPPDATA 'CodexDreamSkin\themes\custom-keepme'
+  New-Item -ItemType Directory -Force -Path $unrelated | Out-Null
+  Set-Content -LiteralPath (Join-Path $unrelated 'theme.json') -Value '{}' -Encoding UTF8
+
   & (Join-Path $ProjectRoot 'Install.ps1') -NoApply
   & (Join-Path $ProjectRoot 'Install.ps1') -NoApply
 
-  $target = Join-Path $env:LOCALAPPDATA 'CodexDreamSkin\themes\preset-yuexinmiao'
-  if (-not (Test-Path -LiteralPath (Join-Path $target 'background.jpg') -PathType Leaf)) {
-    throw 'background.jpg was not installed'
+  foreach ($presetId in @('preset-yuexinmiao', 'preset-yuexinmiao-payday')) {
+    $target = Join-Path $env:LOCALAPPDATA "CodexDreamSkin\themes\$presetId"
+    if (-not (Test-Path -LiteralPath (Join-Path $target 'background.jpg') -PathType Leaf)) {
+      throw "$presetId background.jpg was not installed"
+    }
+    $theme = Get-Content -LiteralPath (Join-Path $target 'theme.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($theme.id -cne $presetId) { throw "unexpected theme id: $($theme.id)" }
+    $files = @(Get-ChildItem -LiteralPath $target -File)
+    if ($files.Count -ne 2) { throw "$presetId must contain exactly two files" }
   }
-  $theme = Get-Content -LiteralPath (Join-Path $target 'theme.json') -Raw -Encoding UTF8 | ConvertFrom-Json
-  if ($theme.id -cne 'preset-yuexinmiao') { throw 'unexpected theme id' }
-  $files = @(Get-ChildItem -LiteralPath $target -File)
-  if ($files.Count -ne 2) { throw 'installed preset must contain exactly two files' }
+  if (-not (Test-Path -LiteralPath (Join-Path $unrelated 'theme.json') -PathType Leaf)) {
+    throw 'an unrelated saved theme was removed'
+  }
 
   Write-Host 'Windows installer tests passed.'
 } finally {

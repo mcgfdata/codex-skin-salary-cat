@@ -6,6 +6,7 @@
 
 - 原始素材：`source/salary-cat-source.png`
 - 派生背景：`presets/preset-yuexinmiao/background.jpg`
+- 派生背景：`presets/preset-yuexinmiao-payday/background.jpg`
 
 ## 授权信息
 

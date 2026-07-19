@@ -4,6 +4,9 @@ All notable changes to this project are recorded here.
 
 ## 0.3.2 - 2026-07-19
 
+- Added the selectable `月薪喵 · 今日营业` banner layout from the same source artwork.
+- Save both Salary Cat presets together while keeping `月薪喵` as the default.
+- Expose both styles in Dream Skin's saved-theme library without replacing unrelated themes.
 - Added one-confirmation macOS setup with automatic quit, completion, theme apply, and relaunch.
 - Delegated first-time completion to a one-shot `launchd` job so users never run a command after quitting Codex.
 - Reused the upstream Dream Skin identity checks and safe restart workflow for deferred setup.

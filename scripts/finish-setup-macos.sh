@@ -9,6 +9,11 @@ SETUP_STATE_ROOT=""
 PROJECT_COPY=""
 CODEX_BUNDLE=""
 JOB_LABEL=""
+DEFAULT_PRESET_ID="preset-yuexinmiao"
+PRESET_IDS=(
+  "preset-yuexinmiao"
+  "preset-yuexinmiao-payday"
+)
 
 notify() {
   /usr/bin/osascript -e "display notification \"$1\" with title \"月薪喵 Codex 皮肤\"" \
@@ -56,7 +61,7 @@ JOB_LABEL="${2:-}"
 if [ "$DRY_RUN" = "true" ]; then
   printf '会等待当前 Codex 安全退出。\n'
   printf '会使用官方 Codex Dream Skin 完成基础配置和重启。\n'
-  printf '会应用月薪喵并在成功后清理一次性文件。\n'
+  printf '会保存两套月薪喵样式、应用默认样式，并在成功后清理一次性文件。\n'
   exit 0
 fi
 
@@ -85,12 +90,15 @@ UPSTREAM_ARCHIVE="$PENDING_ROOT/Codex-Dream-Skin.zip"
 UPSTREAM_EXTRACT="$PENDING_ROOT/upstream"
 [ "$VALIDATE_ONLY" = "true" ] || trap 'finish "$?"' EXIT
 
-for required in \
-  "$PROJECT_COPY/scripts/install-theme-macos.sh" \
-  "$PROJECT_COPY/presets/preset-yuexinmiao/background.jpg" \
-  "$PROJECT_COPY/presets/preset-yuexinmiao/theme.json" \
-  "$UPSTREAM_ARCHIVE"; do
+for required in "$PROJECT_COPY/scripts/install-theme-macos.sh" "$UPSTREAM_ARCHIVE"; do
   [ -f "$required" ] && [ ! -L "$required" ] || fail "一次性设置文件缺失或不安全: $required"
+done
+for preset_id in "${PRESET_IDS[@]}"; do
+  for required in \
+    "$PROJECT_COPY/presets/$preset_id/background.jpg" \
+    "$PROJECT_COPY/presets/$preset_id/theme.json"; do
+    [ -f "$required" ] && [ ! -L "$required" ] || fail "一次性设置文件缺失或不安全: $required"
+  done
 done
 if [ "$VALIDATE_ONLY" = "true" ]; then
   printf '一次性后台设置材料校验通过。\n'
@@ -115,16 +123,18 @@ stop_codex true
 /bin/bash "$PROJECT_COPY/scripts/install-theme-macos.sh" --no-apply
 BASE_SWITCH="$HOME/.codex/codex-dream-skin-studio/scripts/switch-theme-macos.sh"
 [ -x "$BASE_SWITCH" ] || fail "官方主题切换入口缺失"
-"$BASE_SWITCH" --id preset-yuexinmiao
+"$BASE_SWITCH" --id "$DEFAULT_PRESET_ID"
 
 MARKER="$HOME/Library/Application Support/CodexDreamSkinStudio/theme-backup.json"
-THEME_JSON="$HOME/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao/theme.json"
 ACTIVE_THEME_JSON="$HOME/Library/Application Support/CodexDreamSkinStudio/theme/theme.json"
 [ "$(/usr/bin/plutil -extract schemaVersion raw -o - "$MARKER" 2>/dev/null || true)" = "1" ] \
   || fail "基础运行时完成标记缺失或无效"
 [ "$(/usr/bin/plutil -extract platform raw -o - "$MARKER" 2>/dev/null || true)" = "darwin" ] \
   || fail "基础运行时平台标记无效"
-[ "$(/usr/bin/plutil -extract id raw -o - "$THEME_JSON" 2>/dev/null || true)" = "preset-yuexinmiao" ] \
-  || fail "月薪喵主题校验失败"
-[ "$(/usr/bin/plutil -extract id raw -o - "$ACTIVE_THEME_JSON" 2>/dev/null || true)" = "preset-yuexinmiao" ] \
+for preset_id in "${PRESET_IDS[@]}"; do
+  theme_json="$HOME/Library/Application Support/CodexDreamSkinStudio/themes/$preset_id/theme.json"
+  [ "$(/usr/bin/plutil -extract id raw -o - "$theme_json" 2>/dev/null || true)" = "$preset_id" ] \
+    || fail "月薪喵样式校验失败: $preset_id"
+done
+[ "$(/usr/bin/plutil -extract id raw -o - "$ACTIVE_THEME_JSON" 2>/dev/null || true)" = "$DEFAULT_PRESET_ID" ] \
   || fail "月薪喵活动主题校验失败"

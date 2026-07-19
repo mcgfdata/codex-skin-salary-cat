@@ -21,7 +21,7 @@ jobs:
         run: test "${GITHUB_REF_NAME#v}" = "$(tr -d '\r\n' < VERSION)"
       - run: python scripts/build_presets.py
       - run: python scripts/validate_theme.py --release
-      - run: git diff --exit-code -- presets/preset-yuexinmiao
+      - run: git diff --exit-code -- presets/preset-yuexinmiao presets/preset-yuexinmiao-payday
       - name: Build release files
         run: |
           package="dist/codex-skin-salary-cat-${GITHUB_REF_NAME#v}.zip"

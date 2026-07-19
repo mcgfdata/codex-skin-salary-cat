@@ -12,6 +12,24 @@
     "name": "月薪喵",
     "presetDirectory": "presets/preset-yuexinmiao"
   },
+  "themes": [
+    {
+      "id": "preset-yuexinmiao",
+      "name": "月薪喵",
+      "presetDirectory": "presets/preset-yuexinmiao",
+      "default": true
+    },
+    {
+      "id": "preset-yuexinmiao-payday",
+      "name": "月薪喵 · 今日营业",
+      "presetDirectory": "presets/preset-yuexinmiao-payday",
+      "default": false
+    }
+  ],
+  "selection": {
+    "defaultThemeId": "preset-yuexinmiao",
+    "surface": "Codex Dream Skin 已保存的主题"
+  },
   "runtime": {
     "required": true,
     "repository": "https://github.com/Fei-Away/Codex-Dream-Skin",
@@ -50,7 +68,11 @@
       "safeSetupCommand": "./scripts/setup-skin-macos.sh --no-apply",
       "automaticResumeAfterQuit": true,
       "restartPolicy": "one-confirmation-auto-restart",
-      "themeDirectory": "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao"
+      "themeDirectory": "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao",
+      "themeDirectories": [
+        "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao",
+        "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao-payday"
+      ]
     },
     "windows": {
       "detectRuntime": "%LOCALAPPDATA%\\CodexDreamSkin\\engine\\scripts\\theme-windows.ps1",
@@ -58,7 +80,11 @@
       "installCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1",
       "installOnlyCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1 -NoApply",
       "fullSetupCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Setup.ps1",
-      "themeDirectory": "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao"
+      "themeDirectory": "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao",
+      "themeDirectories": [
+        "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao",
+        "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao-payday"
+      ]
     }
   },
   "artwork": {

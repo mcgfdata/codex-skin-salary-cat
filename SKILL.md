@@ -5,7 +5,7 @@ description: Set up and apply the Salary Cat Codex skin by 终端极客 from mcg
 
 # Set Up Salary Cat Codex Skin
 
-Set up the existing theme; never generate or replace its artwork.
+Set up both existing layouts; never generate or replace their shared artwork.
 
 A request to set the skin that names this repository or author is sufficient
 authorization for repository and supported dependency downloads. Do not require the
@@ -23,8 +23,11 @@ dependency handling, and commands implicit unless a failure requires recovery st
    with system tools and continue from the checkout. Do not require Git.
 3. Locate the plugin root and detect macOS or Windows.
 4. Run the repository's full setup entry for that platform.
-5. Verify `preset-yuexinmiao/theme.json` in the local Dream Skin theme library.
-6. Report “installed” and “applied” separately.
+5. Verify `preset-yuexinmiao/theme.json` and `preset-yuexinmiao-payday/theme.json`
+   in the local Dream Skin theme library.
+6. Keep `preset-yuexinmiao` as the applied default and report that both layouts
+   are available in Dream Skin's saved-theme menu.
+7. Report “installed” and “applied” separately.
 
 The setup request authorizes downloading the declared supported dependencies. Run
 the setup entry and let it install them; do not send the user away to install Git,
@@ -44,8 +47,9 @@ For normal setup, run:
 
 If the runtime is missing while Codex is open, this entry presents one native
 confirmation and delegates the remaining work to a one-shot `launchd` job. It safely
-closes Codex through the upstream runtime, completes setup, applies Salary Cat, and
-reopens Codex automatically. Never ask the user to run a command after closing Codex.
+closes Codex through the upstream runtime, completes setup, saves both layouts,
+applies the default Salary Cat style, and reopens Codex automatically. Never ask the
+user to run a command after closing Codex.
 
 Only when the user explicitly asks not to restart, prepare without applying:
 
@@ -60,6 +64,8 @@ Verify:
 ```bash
 /usr/bin/plutil -extract id raw -o - \
   "$HOME/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao/theme.json"
+/usr/bin/plutil -extract id raw -o - \
+  "$HOME/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao-payday/theme.json"
 ```
 
 ## Windows
