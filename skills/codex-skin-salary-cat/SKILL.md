@@ -10,10 +10,14 @@ Install the existing theme; never generate or replace its artwork.
 ## Workflow
 
 1. Resolve the plugin root two directories above this `SKILL.md`.
-2. Detect macOS or Windows.
-3. Run the plugin root's full setup entry for that platform.
-4. Verify that the installed theme ID is `preset-yuexinmiao`.
-5. Report “installed” and “applied” separately.
+2. If that directory does not contain `Setup.command` and `Setup.ps1`, this is a
+   standalone Skill installation. Clone
+   `https://github.com/mcgfdata/codex-skin-salary-cat.git` to a temporary
+   directory and use that checkout as the plugin root.
+3. Detect macOS or Windows.
+4. Run the resolved plugin root's full setup entry for that platform.
+5. Verify that the installed theme ID is `preset-yuexinmiao`.
+6. Report “installed” and “applied” separately.
 
 ## macOS
 
