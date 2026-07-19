@@ -10,7 +10,7 @@ A single-image theme pack for [Codex-Dream-Skin](https://github.com/Fei-Away/Cod
   <img src="./presets/preset-yuexinmiao/background.jpg" alt="Salary Cat theme background preview" width="900">
 </p>
 
-> This lightweight package does not include the Dream Skin runtime and does not modify the official Codex installation. Install Codex Dream Skin before installing this theme.
+> This lightweight package does not bundle the Dream Skin runtime and does not modify the official Codex installation. The full setup entry obtains the prerequisite only from its official upstream repository when needed.
 
 ## Let Codex install it
 
@@ -20,7 +20,7 @@ In a new Codex task, send:
 帮我设置 Codex 皮肤 mcgfdata/codex-skin-salary-cat，作者是终端极客
 ```
 
-Codex should read [`AGENTS.md`](./AGENTS.md) and [`codex-install.json`](./codex-install.json), detect the platform, and follow the matching install flow. A first-time runtime setup may require closing or restarting Codex; the agent must report installation and application as separate states.
+Starting with `0.2.0`, the repository is also a standard Codex Plugin and Skill. Codex can install [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md), read [`codex-install.json`](./codex-install.json), and run the full setup entry. A first-time runtime setup may require closing or restarting Codex.
 
 See [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md) for the full agent-facing flow.
 
@@ -37,11 +37,11 @@ Future upstream schema changes may require a matching update here.
 
 ## Install
 
-1. Install the matching platform runtime from [Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin).
-2. Download and fully extract the theme ZIP from this repository's Releases, or clone the repository.
-3. Run the platform entry point:
-   - macOS: double-click [`Install.command`](./Install.command)
-   - Windows: double-click [`Install.cmd`](./Install.cmd), or run [`Install.ps1`](./Install.ps1) in PowerShell
+1. Download and fully extract the ZIP from Releases, or clone the repository.
+2. Run the full setup entry, which installs the official prerequisite when missing:
+   - macOS: double-click [`Setup.command`](./Setup.command)
+   - Windows: double-click [`Setup.cmd`](./Setup.cmd), or run [`Setup.ps1`](./Setup.ps1)
+3. Users who already have the runtime may use `Install.command` / `Install.cmd` for the theme only.
 
 The installer validates the preset before replacing an older copy with the same ID. It applies Salary Cat when a compatible runtime is available; otherwise, it only adds the theme to the saved-theme library.
 
@@ -83,7 +83,7 @@ Build an install-only ZIP with:
 
 ```bash
 python3 scripts/package_release.py \
-  --output dist/codex-skin-salary-cat-0.1.0.zip
+  --output dist/codex-skin-salary-cat-0.2.0.zip
 ```
 
 ## License and notice

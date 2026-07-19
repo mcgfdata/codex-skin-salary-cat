@@ -25,7 +25,9 @@ jobs:
       - name: Require reproducible generated files
         run: git diff --exit-code -- presets/preset-yuexinmiao
       - name: Check shell syntax
-        run: bash -n Install.command scripts/install-theme-macos.sh
+        run: bash -n Install.command Setup.command scripts/install-theme-macos.sh scripts/setup-skin-macos.sh
+      - name: Check full setup dry run
+        run: ./scripts/setup-skin-macos.sh --dry-run
       - name: Check Windows PowerShell source encoding
         run: |
           python - <<'PY'
@@ -44,9 +46,10 @@ jobs:
           import zipfile
 
           with zipfile.ZipFile('dist/codex-skin-salary-cat-test.zip') as archive:
-              command = next(info for info in archive.infolist() if info.filename.endswith('/Install.command'))
-              if not ((command.external_attr >> 16) & 0o111):
-                  raise SystemExit('Install.command is not executable in the release ZIP')
+              for suffix in ('/Install.command', '/Setup.command', '/scripts/setup-skin-macos.sh'):
+                  command = next(info for info in archive.infolist() if info.filename.endswith(suffix))
+                  if not ((command.external_attr >> 16) & 0o111):
+                      raise SystemExit(f'{suffix} is not executable in the release ZIP')
           PY
 
   windows-installer:
@@ -61,6 +64,7 @@ jobs:
       - name: Install twice in an isolated theme library
         shell: ${{ matrix.shell }}
         run: |
+          & .\Setup.ps1 -DryRun
           $env:LOCALAPPDATA = Join-Path $env:RUNNER_TEMP "salary-cat-$([guid]::NewGuid().ToString('N'))"
           & .\Install.ps1 -NoApply
           & .\Install.ps1 -NoApply

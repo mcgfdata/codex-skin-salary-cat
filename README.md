@@ -10,7 +10,7 @@
   <img src="./presets/preset-yuexinmiao/background.jpg" alt="月薪喵主题背景预览" width="900">
 </p>
 
-> 这是一个轻量主题包，不包含 Dream Skin 基础运行时，也不会修改官方 Codex 安装包。用户需要先安装 Codex Dream Skin，再安装本主题。
+> 这是一个轻量主题包，不把 Dream Skin 基础运行时复制进仓库，也不会修改官方 Codex 安装包。完整安装器会在缺少运行时时仅从官方上游仓库安装依赖。
 
 ## 让 Codex 自动安装
 
@@ -20,7 +20,7 @@
 帮我设置 Codex 皮肤 mcgfdata/codex-skin-salary-cat，作者是终端极客
 ```
 
-Codex 应读取 [`AGENTS.md`](./AGENTS.md) 和 [`codex-install.json`](./codex-install.json)，检测当前平台并执行对应安装流程。首次安装基础运行时可能需要关闭或重启 Codex，代理必须把“已安装”和“已应用”分开报告。
+仓库从 `0.2.0` 起同时是标准 Codex Plugin 和 Skill。Codex 可以安装 [`skills/codex-skin-salary-cat`](./skills/codex-skin-salary-cat/SKILL.md)，读取 [`codex-install.json`](./codex-install.json)，再执行完整安装入口。首次安装基础运行时可能需要关闭或重启 Codex，代理必须把“已安装”和“已应用”分开报告。
 
 完整说明见 [`INSTALL_WITH_CODEX.md`](./INSTALL_WITH_CODEX.md)。
 
@@ -37,15 +37,21 @@ Codex 应读取 [`AGENTS.md`](./AGENTS.md) 和 [`codex-install.json`](./codex-in
 
 ## 安装
 
-1. 先按 [Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin) 的说明安装对应平台基础运行时。
-2. 从本仓库 Releases 下载月薪喵安装包并完整解压，或者克隆本仓库。
-3. 按平台运行安装入口：
-   - macOS：双击 [`Install.command`](./Install.command)
-   - Windows：双击 [`Install.cmd`](./Install.cmd)，或在 PowerShell 中运行 [`Install.ps1`](./Install.ps1)
+1. 从本仓库 Releases 下载月薪喵安装包并完整解压，或者克隆本仓库。
+2. 运行完整安装入口；它会检测并按需安装官方基础运行时：
+   - macOS：双击 [`Setup.command`](./Setup.command)
+   - Windows：双击 [`Setup.cmd`](./Setup.cmd)，或运行 [`Setup.ps1`](./Setup.ps1)
+3. 只安装主题、已有基础运行时的用户，也可运行 `Install.command` / `Install.cmd`。
 
-安装器会先校验预设，再替换同 ID 的旧版本。检测到可用的基础运行时时会自动切换到月薪喵；没有检测到时只写入主题库，之后可从「已保存主题」选择 `月薪喵`。
+完整安装器会先处理官方基础运行时，再校验和安装预设。macOS 在当前任务不能安全重启时可使用：
 
-只安装、不自动应用：
+```bash
+./scripts/setup-skin-macos.sh --no-apply
+```
+
+它会把月薪喵设为活动主题，下次从 Codex Dream Skin 启动时直接生效。
+
+只复制主题、不自动应用：
 
 ```bash
 ./scripts/install-theme-macos.sh --no-apply
@@ -90,7 +96,7 @@ python3 scripts/validate_theme.py --release
 
 ```bash
 python3 scripts/package_release.py \
-  --output dist/codex-skin-salary-cat-0.1.0.zip
+  --output dist/codex-skin-salary-cat-0.2.0.zip
 ```
 
 ## 仓库内容
@@ -100,6 +106,9 @@ python3 scripts/package_release.py \
 - `scripts/build_presets.py`：从唯一素材生成 16:9 背景
 - `scripts/validate_theme.py`：校验图片限制、主题 schema 和发布授权状态
 - `scripts/package_release.py`：生成保留 macOS 可执行权限的安装 ZIP
+- `Setup.command` / `Setup.ps1`：包含官方基础运行时检测的完整安装入口
+- `.codex-plugin/plugin.json` / `SKILL.md`：标准 Codex Plugin/Skill 入口
+- `skills/codex-skin-salary-cat/`：供内置 GitHub Skill 安装器使用
 - `AGENTS.md` / `codex-install.json`：给 Codex 代理读取的安装协议
 - `INSTALL_WITH_CODEX.md`：新任务中的一句话安装说明
 - `发布前填写表.md`：项目所有者需要补充的发布信息

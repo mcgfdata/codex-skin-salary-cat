@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "packageType": "codex-dream-skin-theme",
+  "version": "0.2.0",
   "repository": "https://github.com/mcgfdata/codex-skin-salary-cat",
   "author": {
     "name": "终端极客",
@@ -22,12 +23,15 @@
       "detectRuntime": "~/.codex/codex-dream-skin-studio/scripts/switch-theme-macos.sh",
       "installCommand": "./scripts/install-theme-macos.sh",
       "installOnlyCommand": "./scripts/install-theme-macos.sh --no-apply",
+      "fullSetupCommand": "./Setup.command",
+      "safeSetupCommand": "./scripts/setup-skin-macos.sh --no-apply",
       "themeDirectory": "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao"
     },
     "windows": {
       "detectRuntime": "%LOCALAPPDATA%\\CodexDreamSkin\\engine\\scripts\\theme-windows.ps1",
       "installCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1",
       "installOnlyCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1 -NoApply",
+      "fullSetupCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Setup.ps1",
       "themeDirectory": "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao"
     }
   },

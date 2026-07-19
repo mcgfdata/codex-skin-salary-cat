@@ -1,0 +1,6 @@
+interface:
+  display_name: "月薪喵 Codex 皮肤"
+  short_description: "安装并应用终端极客制作的月薪喵 Codex 皮肤主题包"
+  default_prompt: "使用 $codex-skin-salary-cat 安装并应用月薪喵 Codex 皮肤。"
+policy:
+  allow_implicit_invocation: true

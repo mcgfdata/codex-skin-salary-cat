@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_FILES = [
+    ".codex-plugin/plugin.json",
     "AGENTS.md",
     "ASSET-LICENSE.md",
     "AUTHORS.md",
@@ -21,14 +22,27 @@ PACKAGE_FILES = [
     "NOTICE.md",
     "README.en.md",
     "README.md",
+    "SKILL.md",
+    "Setup.cmd",
+    "Setup.command",
+    "Setup.ps1",
     "VERSION",
+    "agents/openai.yaml",
     "codex-install.json",
     "presets/preset-yuexinmiao/background.jpg",
     "presets/preset-yuexinmiao/theme.json",
     "scripts/install-theme-macos.sh",
     "scripts/install-theme-windows.ps1",
+    "scripts/setup-skin-macos.sh",
+    "skills/codex-skin-salary-cat/SKILL.md",
+    "skills/codex-skin-salary-cat/agents/openai.yaml",
 ]
-EXECUTABLE_FILES = {"Install.command", "scripts/install-theme-macos.sh"}
+EXECUTABLE_FILES = {
+    "Install.command",
+    "Setup.command",
+    "scripts/install-theme-macos.sh",
+    "scripts/setup-skin-macos.sh",
+}
 ZIP_TIMESTAMP = (2026, 1, 1, 0, 0, 0)
 
 

@@ -12,6 +12,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 PRESET_ID = "preset-yuexinmiao"
 MANIFEST_PATH = ROOT / "codex-install.json"
+PLUGIN_PATH = ROOT / ".codex-plugin" / "plugin.json"
 PRESET_DIR = ROOT / "presets" / PRESET_ID
 SOURCE = ROOT / "source" / "salary-cat-source.png"
 THEME_PATH = PRESET_DIR / "theme.json"
@@ -51,12 +52,15 @@ def read_theme() -> dict[str, object]:
 
 
 def validate_install_manifest() -> None:
+    version = (ROOT / "VERSION").read_text(encoding="ascii").strip()
     try:
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         fail(f"invalid UTF-8 JSON in {MANIFEST_PATH}: {error}")
     if not isinstance(manifest, dict) or manifest.get("schemaVersion") != 1:
         fail("codex-install.json must use schema version 1")
+    if manifest.get("version") != version:
+        fail("codex-install.json version does not match VERSION")
     if manifest.get("repository") != "https://github.com/mcgfdata/codex-skin-salary-cat":
         fail("codex-install.json has an unexpected repository")
     author = manifest.get("author")
@@ -68,6 +72,40 @@ def validate_install_manifest() -> None:
     runtime = manifest.get("runtime")
     if not isinstance(runtime, dict) or runtime.get("schemaVersion") != 1:
         fail("codex-install.json has an invalid runtime declaration")
+    platforms = manifest.get("platforms")
+    if not isinstance(platforms, dict):
+        fail("codex-install.json must declare platform setup commands")
+    if platforms.get("macos", {}).get("fullSetupCommand") != "./Setup.command":
+        fail("codex-install.json has an invalid macOS setup command")
+    if "Setup.ps1" not in platforms.get("windows", {}).get("fullSetupCommand", ""):
+        fail("codex-install.json has an invalid Windows setup command")
+
+    try:
+        plugin = json.loads(PLUGIN_PATH.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        fail(f"invalid UTF-8 JSON in {PLUGIN_PATH}: {error}")
+    if plugin.get("name") != "codex-skin-salary-cat" or plugin.get("version") != version:
+        fail("plugin metadata does not match the package name and version")
+    if plugin.get("skills") != "./skills/":
+        fail("plugin must expose the standard skills directory")
+
+    for skill_path in (
+        ROOT / "SKILL.md",
+        ROOT / "skills" / "codex-skin-salary-cat" / "SKILL.md",
+    ):
+        skill = skill_path.read_text(encoding="utf-8")
+        if not skill.startswith("---\nname: codex-skin-salary-cat\n"):
+            fail(f"invalid skill frontmatter: {skill_path}")
+        if "mcgfdata/codex-skin-salary-cat" not in skill or "终端极客" not in skill:
+            fail(f"skill trigger is missing repository or author: {skill_path}")
+
+    for setup_path in (
+        ROOT / "Setup.command",
+        ROOT / "Setup.ps1",
+        ROOT / "scripts" / "setup-skin-macos.sh",
+    ):
+        if not setup_path.is_file():
+            fail(f"full setup entry is missing: {setup_path}")
 
 
 def validate_text(theme: dict[str, object], key: str, maximum: int) -> None:

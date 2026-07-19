@@ -1,0 +1,28 @@
+{
+  "name": "codex-skin-salary-cat",
+  "version": "0.2.0",
+  "description": "Install and apply the Salary Cat theme for Codex Dream Skin.",
+  "author": {
+    "name": "终端极客",
+    "email": "baixin.dev@gmail.com",
+    "url": "https://github.com/mcgfdata"
+  },
+  "homepage": "https://github.com/mcgfdata/codex-skin-salary-cat",
+  "repository": "https://github.com/mcgfdata/codex-skin-salary-cat",
+  "license": "MIT",
+  "keywords": ["codex", "skin", "theme", "salary-cat", "月薪喵"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "月薪喵 Codex 皮肤",
+    "shortDescription": "自动安装并应用终端极客制作的月薪喵主题",
+    "longDescription": "检测 Codex Dream Skin 基础运行时，安装月薪喵主题，并在平台允许时自动应用。",
+    "developerName": "终端极客",
+    "category": "Developer Tools",
+    "capabilities": ["Local theme installation", "macOS", "Windows"],
+    "websiteURL": "https://github.com/mcgfdata/codex-skin-salary-cat",
+    "defaultPrompt": [
+      "帮我设置 Codex 皮肤，GitHub 上的 mcgfdata/codex-skin-salary-cat，作者是终端极客"
+    ],
+    "brandColor": "#43527C"
+  }
+}

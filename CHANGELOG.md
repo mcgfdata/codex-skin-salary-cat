@@ -2,6 +2,12 @@
 
 All notable changes to this project are recorded here.
 
+## 0.2.0 - 2026-07-19
+
+- Added a root Codex Skill and plugin manifest for repository-based discovery.
+- Added full setup entry points that install the official Dream Skin prerequisite when missing.
+- Added no-apply and dry-run paths so an agent can finish safely before restarting Codex.
+
 ## 0.1.0 - 2026-07-19
 
 - Added the single-image `preset-yuexinmiao` theme pack.
