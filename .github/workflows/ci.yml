@@ -53,24 +53,21 @@ jobs:
           PY
 
   windows-installer:
-    name: Windows installer (${{ matrix.shell }})
+    name: Windows installer (${{ matrix.name }})
     runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
-        shell: [powershell, pwsh]
+        include:
+          - name: Windows PowerShell 5.1
+            executable: powershell.exe
+          - name: PowerShell 7
+            executable: pwsh.exe
     steps:
       - uses: actions/checkout@v4
       - name: Install twice in an isolated theme library
-        shell: ${{ matrix.shell }}
+        shell: powershell
         run: |
-          & .\Setup.ps1 -DryRun
-          $env:LOCALAPPDATA = Join-Path $env:RUNNER_TEMP "salary-cat-$([guid]::NewGuid().ToString('N'))"
-          & .\Install.ps1 -NoApply
-          & .\Install.ps1 -NoApply
-          $target = Join-Path $env:LOCALAPPDATA 'CodexDreamSkin\themes\preset-yuexinmiao'
-          if (-not (Test-Path -LiteralPath (Join-Path $target 'background.jpg') -PathType Leaf)) { throw 'background.jpg was not installed' }
-          $theme = Get-Content -LiteralPath (Join-Path $target 'theme.json') -Raw -Encoding UTF8 | ConvertFrom-Json
-          if ($theme.id -cne 'preset-yuexinmiao') { throw 'unexpected theme id' }
-          $files = @(Get-ChildItem -LiteralPath $target -File)
-          if ($files.Count -ne 2) { throw 'installed preset must contain exactly two files' }
+          & '${{ matrix.executable }}' -NoLogo -NoProfile -ExecutionPolicy Bypass `
+            -File .\scripts\test-windows-installer.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
