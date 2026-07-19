@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "preset-yuexinmiao",
+  "name": "月薪喵",
+  "brandSubtitle": "月薪喵",
+  "tagline": "月薪喵",
+  "projectPrefix": "选择项目 · ",
+  "projectLabel": "◉  选择项目",
+  "statusText": "月薪喵 ONLINE",
+  "quote": "月薪喵",
+  "image": "background.jpg",
+  "appearance": "auto",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.48,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#fdf0d1",
+    "panel": "#fffaf0",
+    "panelAlt": "#f2dfc1",
+    "accent": "#43527c",
+    "accentAlt": "#5f7099",
+    "secondary": "#6f6e3f",
+    "highlight": "#a8752f",
+    "text": "#4b3429",
+    "muted": "#7c6a60",
+    "line": "rgba(67, 82, 124, .24)"
+  }
+}

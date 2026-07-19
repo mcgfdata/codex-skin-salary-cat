@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-theme:
+    name: Build and validate theme
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python scripts/build_presets.py
+      - run: python scripts/validate_theme.py
+      - name: Require reproducible generated files
+        run: git diff --exit-code -- presets/preset-yuexinmiao
+      - name: Check shell syntax
+        run: bash -n Install.command scripts/install-theme-macos.sh
+      - name: Check Windows PowerShell source encoding
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          for path in Path('.').rglob('*.ps1'):
+              data = path.read_bytes()
+              if any(byte >= 0x80 for byte in data) and not data.startswith(b'\xef\xbb\xbf'):
+                  raise SystemExit(f'{path}: non-ASCII PowerShell 5.1 source requires a UTF-8 BOM')
+          PY
+      - name: Build install ZIP
+        run: python scripts/package_release.py --output dist/codex-skin-salary-cat-test.zip
+      - name: Check executable bit in ZIP
+        run: |
+          python - <<'PY'
+          import zipfile
+
+          with zipfile.ZipFile('dist/codex-skin-salary-cat-test.zip') as archive:
+              command = next(info for info in archive.infolist() if info.filename.endswith('/Install.command'))
+              if not ((command.external_attr >> 16) & 0o111):
+                  raise SystemExit('Install.command is not executable in the release ZIP')
+          PY
+
+  windows-installer:
+    name: Windows installer (${{ matrix.shell }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install twice in an isolated theme library
+        shell: ${{ matrix.shell }}
+        run: |
+          $env:LOCALAPPDATA = Join-Path $env:RUNNER_TEMP "salary-cat-$([guid]::NewGuid().ToString('N'))"
+          & .\Install.ps1 -NoApply
+          & .\Install.ps1 -NoApply
+          $target = Join-Path $env:LOCALAPPDATA 'CodexDreamSkin\themes\preset-yuexinmiao'
+          if (-not (Test-Path -LiteralPath (Join-Path $target 'background.jpg') -PathType Leaf)) { throw 'background.jpg was not installed' }
+          $theme = Get-Content -LiteralPath (Join-Path $target 'theme.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+          if ($theme.id -cne 'preset-yuexinmiao') { throw 'unexpected theme id' }
+          $files = @(Get-ChildItem -LiteralPath $target -File)
+          if ($files.Count -ne 2) { throw 'installed preset must contain exactly two files' }

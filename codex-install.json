@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "packageType": "codex-dream-skin-theme",
+  "repository": "https://github.com/mcgfdata/codex-skin-salary-cat",
+  "author": {
+    "name": "终端极客",
+    "github": "mcgfdata"
+  },
+  "theme": {
+    "id": "preset-yuexinmiao",
+    "name": "月薪喵",
+    "presetDirectory": "presets/preset-yuexinmiao"
+  },
+  "runtime": {
+    "required": true,
+    "repository": "https://github.com/Fei-Away/Codex-Dream-Skin",
+    "schemaVersion": 1,
+    "validatedVersion": "1.2.0"
+  },
+  "platforms": {
+    "macos": {
+      "detectRuntime": "~/.codex/codex-dream-skin-studio/scripts/switch-theme-macos.sh",
+      "installCommand": "./scripts/install-theme-macos.sh",
+      "installOnlyCommand": "./scripts/install-theme-macos.sh --no-apply",
+      "themeDirectory": "~/Library/Application Support/CodexDreamSkinStudio/themes/preset-yuexinmiao"
+    },
+    "windows": {
+      "detectRuntime": "%LOCALAPPDATA%\\CodexDreamSkin\\engine\\scripts\\theme-windows.ps1",
+      "installCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1",
+      "installOnlyCommand": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1 -NoApply",
+      "themeDirectory": "%LOCALAPPDATA%\\CodexDreamSkin\\themes\\preset-yuexinmiao"
+    }
+  },
+  "artwork": {
+    "sourceCount": 1,
+    "source": "source/salary-cat-source.png",
+    "license": "CC-BY-4.0",
+    "attribution": "月薪喵主题作者：终端极客"
+  }
+}
